@@ -39,9 +39,9 @@
 		createImageArray(opt.selector);
 		
 		//handle multi-served image src
-		each(opt.multi, function(i){
-			if(opt.multi[i].width >= window.screen.width) {
-				source = opt.multi[i].src;
+		each(opt.multi, function(object){
+			if(object.width >= window.screen.width) {
+				source = object.src;
 				return false;
 			}
 		});
@@ -93,8 +93,8 @@
 			var img = new Image();
 			var src = ele.getAttribute(ele.getAttribute(source) ? source : opt.src);
 			// clean markup, remove data source attributes
-			each(opt.multi, function(i){
-				ele.removeAttribute(opt.multi[i].src);
+			each(opt.multi, function(object){
+				ele.removeAttribute(object.src);
 			});
 			ele.removeAttribute(opt.src);
 			img.onload = function() {
@@ -148,7 +148,7 @@
 	 function each(object, fn){
  		if(object && fn) {
  			var _count = object.length;
- 			for(var i = 0; i<_count && fn(i) !== false; i++){}
+ 			for(var i = 0; i<_count && fn(object[i], i) !== false; i++){}
  		}
 	 };
 	 
