@@ -42,9 +42,7 @@
 		opt.offset		= options.offset 	|| 100;
 	  	opt.selector 	= options.selector 	|| '.b-lazy';
 		opt.onLoaded 	= options.onLoaded 	|| false;
-		opt.container	= document.querySelector(
-							options.container
-						) 					|| window;
+		opt.container	= options.container ?  document.querySelectorAll(options.container) : window;
 		source 			= opt.src;
 		//throttle, ensures that we don't call the functions too often
 		validateT		= throttle(validate, 50); 
