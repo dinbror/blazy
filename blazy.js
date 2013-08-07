@@ -3,7 +3,7 @@
  * @type: javascript
  * @author: (c) Bjoern Klinggaard - @bklinggaard
  * @demo: http://dinbror.dk/blazy
- * @version: 1.0.1
+ * @version: 1.0.2
  *==================================================================================================================*/
 ;var Blazy = (function(window, document) {
 	'use strict';
@@ -21,6 +21,21 @@
 	
 	// constructor
 	function Blazy(options) {
+		//IE7- fallback for querySelectorAll
+		if (!document.querySelectorAll) {
+			var s=document.createStyleSheet();
+			document.querySelectorAll = function(r, c, i, j, a) {
+				a=document.all, c=[], r = r.replace(/\[for\b/gi, '[htmlFor').split(',');
+				for (i=r.length; i--;) {
+					s.addRule(r[i], 'k:v');
+					for (j=a.length; j--;) a[j].currentStyle.k && c.push(a[j]);
+					s.removeRule(0);
+				}
+				return c;
+			}
+		}
+		
+		//options
 		options 		= options 			|| {};
 		opt.src			= options.src		|| 'data-src';
 		opt.multi	 	= options.multi		|| false;
@@ -68,7 +83,7 @@
 		unbindEvent(opt.container, 'resize', validateT);
 		unbindEvent(opt.container, 'resize', saveWinHeightT);
 		count = 0;
-		images = [];
+		images.length = 0;
 	};
 	
 	// private helper functions
@@ -88,7 +103,6 @@
 	
 	function loadImage(ele){
 		// if element is visible and not already loaded
-		// use classList.contains instead of indexOf and ignore missing support in IE9-?
 		if(ele.offsetWidth > 0 && ele.offsetHeight > 0 && (' ' + ele.className + ' ').indexOf(' loaded ') === -1) {
 			var img = new Image();
 			var src = ele.getAttribute(ele.getAttribute(source) ? source : opt.src);
@@ -139,7 +153,7 @@
 	 
 	 function unbindEvent(ele, type, fn) {
        if (ele.detachEvent) {
-         ele.detachEvent && el.detachEvent('on' + type, fn);
+         ele.detachEvent && ele.detachEvent('on' + type, fn);
        } else {
          ele.removeEventListener(type, fn, false);
        }
