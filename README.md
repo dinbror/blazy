@@ -12,7 +12,7 @@ bLazy is a lightweight lazy loading image script (less than 1KB minified and gzi
 
 ## CHANGELOG
 ### v 1.0.3 (2013/8/27) ###
-* Added new option, 'loadedClass'. Classname an image will get when loaded.
+* Added new option, `loadedClass`. Classname an image will get when loaded.
 * Added support for horizontal lazy loading.
 * Reduced throttle time for validate.
 
