@@ -149,19 +149,19 @@
 	 };
 	 
 	 function bindEvent(ele, type, fn) {
-       if (ele.attachEvent) {
-         ele.attachEvent && ele.attachEvent('on' + type, fn);
-       } else {
-         ele.addEventListener(type, fn, false);
-       }
+     	if (ele.attachEvent) {
+        	ele.attachEvent && ele.attachEvent('on' + type, fn);
+       	} else {
+        	ele.addEventListener(type, fn, false);
+       	}
      };
 	 
 	 function unbindEvent(ele, type, fn) {
-       if (ele.detachEvent) {
-         ele.detachEvent && ele.detachEvent('on' + type, fn);
-       } else {
-         ele.removeEventListener(type, fn, false);
-       }
+       	if (ele.detachEvent) {
+        	ele.detachEvent && ele.detachEvent('on' + type, fn);
+       	} else {
+        	ele.removeEventListener(type, fn, false);
+       	}
      };
 	 
 	 function each(object, fn){
