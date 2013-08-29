@@ -1,5 +1,5 @@
 /*!
-  [be]Lazy.js - v1.0.3 - 2013.08.27
+  [be]Lazy.js - v1.0.4 - 2013.08.29
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -102,19 +102,21 @@
 	function loadImage(ele){
 		// if element is visible and not already loaded
 		if(ele.offsetWidth > 0 && ele.offsetHeight > 0 && (' ' + ele.className + ' ').indexOf(' ' + opt.loadedClass + ' ') === -1) {
-			var img = new Image();
-			var src = ele.getAttribute(ele.getAttribute(source) ? source : opt.src);
-			// clean markup, remove data source attributes
-			each(opt.multi, function(object){
-				ele.removeAttribute(object.src);
-			});
-			ele.removeAttribute(opt.src);
-			img.onload = function() {
-		      	!!ele.parent ? ele.parent.replaceChild(img, ele) : ele.src = src;	
-				ele.className = ele.className + ' ' + opt.loadedClass;	
-				if(opt.onLoaded) opt.onLoaded(ele);
+			var src = ele.getAttribute(source) || ele.getAttribute(opt.src);
+			if(src) {
+				var img = new Image();
+				// clean markup, remove data source attributes
+				each(opt.multi, function(object){
+					ele.removeAttribute(object.src);
+				});
+				ele.removeAttribute(opt.src);
+				img.onload = function() {
+			      	!!ele.parent ? ele.parent.replaceChild(img, ele) : ele.src = src;	
+					ele.className = ele.className + ' ' + opt.loadedClass;	
+					if(opt.onLoaded) opt.onLoaded(ele);
+				}
+				img.src = src; //preload image
 			}
-			img.src = src; //preload image
 		}
 	 };
 			
