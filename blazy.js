@@ -1,5 +1,5 @@
 /*!
-  [be]Lazy.js - v1.0.4 - 2013.08.29
+  [be]Lazy.js - v1.0.5 - 2013.10.07
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -41,7 +41,7 @@
 		opt.offset		= options.offset 		|| 100;
 	  	opt.selector 	= options.selector 		|| '.b-lazy';
 		opt.onLoaded 	= options.onLoaded 		|| false;
-		opt.container	= options.container 	?  document.querySelectorAll(options.container) : window;
+		opt.container	= options.container 	?  document.querySelectorAll(options.container)[0] : window;
 		opt.loadedClass = options.loadedClass 	|| 'b-loaded';
 		source 			= opt.src;
 		//throttle, ensures that we don't call the functions too often
@@ -151,19 +151,19 @@
 	 };
 	 
 	 function bindEvent(ele, type, fn) {
-     	if (ele.attachEvent) {
-        	ele.attachEvent && ele.attachEvent('on' + type, fn);
-       	} else {
-        	ele.addEventListener(type, fn, false);
-       	}
+       if (ele.attachEvent) {
+         ele.attachEvent && ele.attachEvent('on' + type, fn);
+       } else {
+         ele.addEventListener(type, fn, false);
+       }
      };
 	 
 	 function unbindEvent(ele, type, fn) {
-       	if (ele.detachEvent) {
-        	ele.detachEvent && ele.detachEvent('on' + type, fn);
-       	} else {
-        	ele.removeEventListener(type, fn, false);
-       	}
+       if (ele.detachEvent) {
+         ele.detachEvent && ele.detachEvent('on' + type, fn);
+       } else {
+         ele.removeEventListener(type, fn, false);
+       }
      };
 	 
 	 function each(object, fn){
