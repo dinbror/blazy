@@ -1,5 +1,5 @@
 /*!
-  [be]Lazy.js - v1.0.5 - 2013.10.07
+  [be]Lazy.js - v1.1.0 - 2013.11.22
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -20,7 +20,7 @@
 	
 	// constructor
 	function Blazy(options) {
-		//IE7- fallback for querySelectorAll
+		//IE7- fallback for missing querySelectorAll support
 		if (!document.querySelectorAll) {
 			var s=document.createStyleSheet();
 			document.querySelectorAll = function(r, c, i, j, a) {
@@ -38,10 +38,11 @@
 		options 		= options 				|| {};
 		opt.src			= options.src			|| 'data-src';
 		opt.multi	 	= options.multi			|| false;
+		opt.error 		= options.error 		|| false;
 		opt.offset		= options.offset 		|| 100;
+		opt.success 	= options.success 		|| false;
 	  	opt.selector 	= options.selector 		|| '.b-lazy';
-		opt.onLoaded 	= options.onLoaded 		|| false;
-		opt.container	= options.container 	?  document.querySelectorAll(options.container)[0] : window;
+		opt.container	= options.container 	?  document.querySelectorAll(options.container) : false;
 		opt.loadedClass = options.loadedClass 	|| 'b-loaded';
 		source 			= opt.src;
 		//throttle, ensures that we don't call the functions too often
@@ -60,9 +61,14 @@
 		});
 		
 		//binding events
-		bindEvent(opt.container, 'scroll', validateT);
-		bindEvent(opt.container, 'resize', validateT);
-		bindEvent(opt.container, 'resize', saveWinOffsetT);
+		if(opt.container) {
+			each(opt.container, function(object){
+				bindEvent(object, 'scroll', validateT);
+			});
+		}
+		bindEvent(window, 'scroll', validateT);
+		bindEvent(window, 'resize', validateT);
+		bindEvent(window, 'resize', saveWinOffsetT);
 		
 		//start, should blazy ensure domready?
 		validate();		
@@ -77,9 +83,14 @@
 		loadImage(element);
 	};
 	Blazy.prototype.destroy = function(){
-		unbindEvent(opt.container, 'scroll', validateT);
-		unbindEvent(opt.container, 'resize', validateT);
-		unbindEvent(opt.container, 'resize', saveWinOffsetT);
+		if(opt.container){
+			each(opt.container, function(object){
+				unbindEvent(object, 'scroll', validateT);
+			});
+		}
+		unbindEvent(window, 'scroll', validateT);
+		unbindEvent(window, 'resize', validateT);
+		unbindEvent(window, 'resize', saveWinOffsetT);
 		count = 0;
 		images.length = 0;
 	};
@@ -88,7 +99,7 @@
 	function validate() {
 		for(var i = 0; i<count; i++){
  			if(elementInView(images[i])) {
- 				loadImage(images[i]);
+				loadImage(images[i]);
  				images.splice(i, 1);
  				count = count-1;
  				i--;
@@ -110,12 +121,17 @@
 					ele.removeAttribute(object.src);
 				});
 				ele.removeAttribute(opt.src);
+				img.onerror = function() {
+					if(opt.error) opt.error(ele, "invalid");
+				} 
 				img.onload = function() {
 			      	!!ele.parent ? ele.parent.replaceChild(img, ele) : ele.src = src;	
 					ele.className = ele.className + ' ' + opt.loadedClass;	
-					if(opt.onLoaded) opt.onLoaded(ele);
+					if(opt.success) opt.success(ele);
 				}
 				img.src = src; //preload image
+			} else {
+				if(opt.error) opt.error(ele, "missing");
 			}
 		}
 	 };
@@ -123,6 +139,7 @@
 	function elementInView(ele) {
 		var offset = ele.getBoundingClientRect();
 		var bottomline = winHeight + opt.offset;
+	
 	    return (
 		 // inside horizontal view
 			offset.left >= 0

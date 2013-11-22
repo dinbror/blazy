@@ -1,8 +1,8 @@
-bLazy.js
+hey, bLazy.js
 =====
 
 ### DEMO: ###
-http://dinbror.dk/blazy
+http://dinbror.dk/blazy (There will soon be more examples)
 
 ### API: ###
 http://dinbror.dk/blog/blazy
@@ -11,6 +11,11 @@ http://dinbror.dk/blog/blazy
 bLazy is a lightweight lazy loading image script (less than 1KB minified and gzipped). It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data loaded if he/she doesn't browse the whole page. 
 
 ## CHANGELOG
+### v 1.1.0 (2013/11/22) ###
+* Renamed success callback from onLoaded to `success`.
+* Added onerror callback; `error`.
+* Added the possibility to pass multiple containers instead of one.
+
 ### v 1.0.5 (2013/10/7) ###
 * Fixed "Uncaught TypeError" when container isn't default (window).
 
