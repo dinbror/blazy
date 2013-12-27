@@ -11,6 +11,9 @@ http://dinbror.dk/blog/blazy
 bLazy is a lightweight lazy loading image script (less than 1KB minified and gzipped). It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data loaded if he/she doesn't browse the whole page. 
 
 ## CHANGELOG
+### v 1.1.1 (2013/12/27) ###
+* Fixed #1, resize/scroll events may be detached when adding elements by ajax.
+
 ### v 1.1.0 (2013/11/22) ###
 * Renamed success callback from onLoaded to `success`.
 * Added onerror callback; `error`.
