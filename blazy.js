@@ -1,5 +1,5 @@
 /*!
-  [be]Lazy.js - v1.1.1 - 2013.12.27
+  [be]Lazy.js - v1.1.2 - 2014.01.03
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -7,10 +7,7 @@
 	'use strict';
 	
 	//vars
-	var source;
-	var opt = {};
-	var winWidth;
-	var winHeight;
+	var source, options, winWidth, winHeight, isRetina;
 	var destroyed = true;
 	var count = 0;
 	var images = [];
@@ -20,7 +17,7 @@
 	var saveWinOffsetT;
 	
 	// constructor
-	function Blazy(options) {
+	function Blazy(settings) {
 		//IE7- fallback for missing querySelectorAll support
 		if (!document.querySelectorAll) {
 			var s=document.createStyleSheet();
@@ -36,25 +33,27 @@
 		}
 		
 		//options
-		options 			= options 				|| {};
-		opt.src				= options.src			|| 'data-src';
-		opt.multi	 		= options.multi			|| false;
-		opt.error	 		= options.error 		|| false;
-		opt.offset			= options.offset 		|| 100;
-		opt.success		 	= options.success 		|| false;
-	  	opt.selector 		= options.selector 		|| '.b-lazy';
-		opt.container		= options.container 	?  document.querySelectorAll(options.container) : false;
-		opt.errorClass 		= options.errorClass 	|| 'b-error';
-		opt.successClass 	= options.successClass 	|| 'b-loaded';
-		source 				= opt.src;
+		options 				= settings 				|| {};
+		options.src				= options.src			|| 'data-src';
+		options.multi	 		= options.multi			|| false;
+		options.error	 		= options.error 		|| false;
+		options.offset			= options.offset 		|| 100;
+		options.success		 	= options.success 		|| false;
+	  	options.selector 		= options.selector 		|| '.b-lazy';
+		options.separator 		= options.separator 	|| '|';
+		options.container		= options.container 	?  document.querySelectorAll(options.container) : false;
+		options.errorClass 		= options.errorClass 	|| 'b-error';
+		options.successClass 	= options.successClass 	|| 'b-loaded';
+		source 					= options.src;
+		isRetina				= true;//window.devicePixelRatio > 1;
 		//throttle, ensures that we don't call the functions too often
-		validateT			= throttle(validate, 20); 
-		saveWinOffsetT		= throttle(saveWinOffset, 50);
+		validateT				= throttle(validate, 20); 
+		saveWinOffsetT			= throttle(saveWinOffset, 50);
 		
 		saveWinOffset();		
 		
 		//handle multi-served image src
-		each(opt.multi, function(object){
+		each(options.multi, function(object){
 			if(object.width >= window.screen.width) {
 				source = object.src;
 				return false;
@@ -70,12 +69,11 @@
  		initialize();
    	};
 	Blazy.prototype.load = function(element){
-		loadImage(element);
+		if(!isElementLoaded(element)) loadImage(element);
 	};
 	Blazy.prototype.destroy = function(){
-		destroyed = true;
-		if(opt.container){
-			each(opt.container, function(object){
+		if(options.container){
+			each(options.container, function(object){
 				unbindEvent(object, 'scroll', validateT);
 			});
 		}
@@ -84,20 +82,21 @@
 		unbindEvent(window, 'resize', saveWinOffsetT);
 		count = 0;
 		images.length = 0;
+		destroyed = true;
 	};
 	
 	// private helper functions
 	function validate() {
 		for(var i = 0; i<count; i++){
 			var image = images[i];
-			var isImageLoaded = (' ' + image.className + ' ').indexOf(' ' + opt.successClass + ' ') !== -1;
- 			if(elementInView(image) || isImageLoaded) {
+			var alreadyLoaded = isElementLoaded(image);
+ 			if(elementInView(image) || alreadyLoaded) {
 				// If an image has already been loaded we won't do it again
-				if(!isImageLoaded) loadImage(images[i]);
+				if(!alreadyLoaded) loadImage(image);
  				images.splice(i, 1);
- 				count = count-1;
+ 				count--;
  				i--;
- 			} 	
+ 			} 
  		}
 		if(count === 0) {
 			Blazy.prototype.destroy();
@@ -107,48 +106,55 @@
 	function loadImage(ele){
 		// if element is visible
 		if(ele.offsetWidth > 0 && ele.offsetHeight > 0) {
-			var src = ele.getAttribute(source) || ele.getAttribute(opt.src);
+			var dataSrc = ele.getAttribute(source) || ele.getAttribute(options.src); // fallback to default data-src
+			var dataSrcSplitted = dataSrc.split(options.separator);
+			var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
 			if(src) {
 				var img = new Image();
-				// clean markup, remove data source attributes
-				each(opt.multi, function(object){
+				// cleanup markup, remove data source attributes
+				each(options.multi, function(object){
 					ele.removeAttribute(object.src);
 				});
-				ele.removeAttribute(opt.src);
+				ele.removeAttribute(options.src);
 				img.onerror = function() {
-					if(opt.error) opt.error(ele, "invalid");
-					ele.className = ele.className + ' ' + opt.errorClass;
+					if(options.error) options.error(ele, "invalid");
+					ele.className = ele.className + ' ' + options.errorClass;
 				} 
 				img.onload = function() {
-			      	!!ele.parent ? ele.parent.replaceChild(img, ele) : ele.src = src;	
-					ele.className = ele.className + ' ' + opt.successClass;	
-					if(opt.success) opt.success(ele);
+					// Is element an image or should we add the src as a background image?
+			      	ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.setAttribute('style', 'background-image: url("' + src + '");');	
+					ele.className = ele.className + ' ' + options.successClass;	
+					if(options.success) options.success(ele);
 				}
 				img.src = src; //preload image
 			} else {
-				if(opt.error) opt.error(ele, "missing");
-				ele.className = ele.className + ' ' + opt.errorClass;
+				if(options.error) options.error(ele, "missing");
+				ele.className = ele.className + ' ' + options.errorClass;
 			}
 		}
 	 }
 			
 	function elementInView(ele) {
 		var offset = ele.getBoundingClientRect();
-		var bottomline = winHeight + opt.offset;
+		var bottomline = winHeight + options.offset;
 	
 	    return (
 		 // inside horizontal view
 			offset.left >= 0
-		 && offset.left <= winWidth + opt.offset	 
+		 && offset.left <= winWidth + options.offset	 
 		 && (
 		 // from top to bottom
 			offset.top  >= 0
 		 	&& offset.top  <= bottomline
 		 // from bottom to top
 		 || offset.bottom <= bottomline
-	 	    && offset.bottom >= 0 - opt.offset
+	 	    && offset.bottom >= 0 - options.offset
 			)
 	 	);
+	 }
+	 
+	 function isElementLoaded(ele) {
+		 return (' ' + ele.className + ' ').indexOf(' ' + options.successClass + ' ') !== -1;
 	 }
 	 
 	 function createImageArray(selector) {
@@ -165,12 +171,12 @@
 	 
 	 function initialize(){
 		// First we create an array of images to lazy load
-		createImageArray(opt.selector);
+		createImageArray(options.selector);
 		// Then we bind events if not already binded
 		if(destroyed) {
 			destroyed = false;
-			if(opt.container) {
-	 			each(opt.container, function(object){
+			if(options.container) {
+	 			each(options.container, function(object){
 	 				bindEvent(object, 'scroll', validateT);
 	 			});
 	 		}

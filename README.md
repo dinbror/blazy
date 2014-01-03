@@ -11,8 +11,15 @@ http://dinbror.dk/blog/blazy
 bLazy is a lightweight lazy loading image script (less than 1KB minified and gzipped). It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data loaded if he/she doesn't browse the whole page. 
 
 ## CHANGELOG
+### v 1.1.2 (2014/01/03) ###
+* New feature: After many requests I added the possibility to handle retina images (if you’re not doing retina-first).
+* New feature: Now you can also lazy load background images.
+* Added new option, `separator`. Used if you want to pass retina images, default separator is ‘|’. (data-src=“image.jpg|image@2x.jpg”).
+
 ### v 1.1.1 (2013/12/27) ###
 * Fixed #1, resize/scroll events may be detached when adding elements by ajax.
+* Added new option, `errorClass`. Classname an image will get if something goes wrong, default is ‘b-error’.
+* Renamed option loadedClass to `successClass` so naming is aligned. Default is still ‘b-loaded’.
 
 ### v 1.1.0 (2013/11/22) ###
 * Renamed success callback from onLoaded to `success`.
