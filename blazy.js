@@ -3,7 +3,7 @@
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
-;var Blazy = (function(window, document) {
+var Blazy = (function(window, document) {
 	'use strict';
 	
 	//vars
