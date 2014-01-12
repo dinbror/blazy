@@ -2,13 +2,15 @@ hey, bLazy.js
 =====
 
 ### DEMO: ###
-http://dinbror.dk/blazy (There will soon be more examples)
+Sadly my host is having some serious server issues why the demo site is down. 
+In the meantime you can see a basic example at codepen: 
+http://codepen.io/dinbror/pen/HzCAJ
 
 ### API: ###
 http://dinbror.dk/blog/blazy
 
 ### DESCRIPTION: ###
-bLazy is a lightweight lazy loading image script (less than 1KB minified and gzipped). It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data loaded if he/she doesn't browse the whole page. 
+bLazy is a lightweight script for lazy loading and multi-serving images (less than 1KB minified and gzipped). It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data loaded if he/she doesn't browse the whole page. 
 
 ## CHANGELOG
 ### v 1.1.2 (2014/01/03) ###
