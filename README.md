@@ -3,6 +3,7 @@ hey, bLazy.js
 
 ### DEMO: ###
 http://dinbror.dk/blazy
+
 More examples will come. In the meantime you can play with a basic example at codepen:
 http://codepen.io/dinbror/pen/HzCAJ
 
