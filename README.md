@@ -2,8 +2,8 @@ hey, bLazy.js
 =====
 
 ### DEMO: ###
-Sadly my host is having some serious server issues why the demo site is down. 
-In the meantime you can see a basic example at codepen: 
+http://dinbror.dk/blazy
+More examples will come. In the meantime you can play with a basic example at codepen:
 http://codepen.io/dinbror/pen/HzCAJ
 
 ### API: ###
