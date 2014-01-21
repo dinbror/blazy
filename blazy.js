@@ -1,5 +1,5 @@
 /*!
-  [be]Lazy.js - v1.1.2 - 2014.01.03
+  [be]Lazy.js - v1.1.3 - 2014.01.21
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -45,7 +45,7 @@
 		options.errorClass 		= options.errorClass 	|| 'b-error';
 		options.successClass 	= options.successClass 	|| 'b-loaded';
 		source 					= options.src;
-		isRetina				= true;//window.devicePixelRatio > 1;
+		isRetina				= window.devicePixelRatio > 1;
 		//throttle, ensures that we don't call the functions too often
 		validateT				= throttle(validate, 20); 
 		saveWinOffsetT			= throttle(saveWinOffset, 50);
@@ -107,9 +107,9 @@
 		// if element is visible
 		if(ele.offsetWidth > 0 && ele.offsetHeight > 0) {
 			var dataSrc = ele.getAttribute(source) || ele.getAttribute(options.src); // fallback to default data-src
-			var dataSrcSplitted = dataSrc.split(options.separator);
-			var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
-			if(src) {
+			if(dataSrc) {
+				var dataSrcSplitted = dataSrc.split(options.separator);
+				var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
 				var img = new Image();
 				// cleanup markup, remove data source attributes
 				each(options.multi, function(object){
@@ -135,20 +135,20 @@
 	 }
 			
 	function elementInView(ele) {
-		var offset = ele.getBoundingClientRect();
+		var rect = ele.getBoundingClientRect();
 		var bottomline = winHeight + options.offset;
-	
+		
 	    return (
 		 // inside horizontal view
-			offset.left >= 0
-		 && offset.left <= winWidth + options.offset	 
+			rect.left >= 0
+		 && rect.right <= winWidth + options.offset	 
 		 && (
 		 // from top to bottom
-			offset.top  >= 0
-		 	&& offset.top  <= bottomline
+			rect.top  >= 0
+		 	&& rect.top  <= bottomline
 		 // from bottom to top
-		 || offset.bottom <= bottomline
-	 	    && offset.bottom >= 0 - options.offset
+		 || rect.bottom <= bottomline
+	 	    && rect.bottom >= 0 - options.offset
 			)
 	 	);
 	 }
@@ -165,8 +165,9 @@
 	 }
 	 
 	 function saveWinOffset(){
-		 winHeight = window.innerHeight || document.documentElement.clientHeight;
-		 winWidth = window.innerWidth || document.documentElement.clientWidth;
+		 var html = document.documentElement;
+		 winHeight = window.innerHeight || html.clientHeight;
+		 winWidth = window.innerWidth || html.clientWidth;
 	 }
 	 
 	 function initialize(){

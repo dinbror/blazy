@@ -14,6 +14,10 @@ http://dinbror.dk/blog/blazy
 bLazy is a lightweight script for lazy loading and multi-serving images (less than 1KB minified and gzipped). It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data loaded if he/she doesn't browse the whole page. 
 
 ## CHANGELOG
+### v 1.1.3 (2014/01/21) ###
+* Fixed hardcoded retina check (isRetina = true).
+* Fixed "Uncaught TypeError" when data-src is null. Instead it'll trigger the `error` callback.
+
 ### v 1.1.2 (2014/01/03) ###
 * New feature: After many requests I added the possibility to handle retina images (if you’re not doing retina-first).
 * New feature: Now you can also lazy load background images.
