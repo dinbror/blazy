@@ -5,17 +5,17 @@
 */
 ;var Blazy = (function(window, document) {
 	'use strict';
-	
+
 	//vars
-	var source, options, winWidth, winHeight, isRetina;
+	var source, options, winWidth, winHeight, isRetina, fastConnection;
 	var destroyed = true;
 	var count = 0;
 	var images = [];
-	
+
 	//throttle vars
 	var validateT;
 	var saveWinOffsetT;
-	
+
 	// constructor
 	function Blazy(settings) {
 		//IE7- fallback for missing querySelectorAll support
@@ -31,7 +31,7 @@
 				return c;
 			};
 		}
-		
+
 		//options
 		options 				= settings 				|| {};
 		options.src				= options.src			|| 'data-src';
@@ -46,12 +46,13 @@
 		options.successClass 	= options.successClass 	|| 'b-loaded';
 		source 					= options.src;
 		isRetina				= window.devicePixelRatio > 1;
+		fastConnection  = true;
 		//throttle, ensures that we don't call the functions too often
-		validateT				= throttle(validate, 20); 
+		validateT				= throttle(validate, 20);
 		saveWinOffsetT			= throttle(saveWinOffset, 50);
-		
-		saveWinOffset();		
-		
+
+		saveWinOffset();
+
 		//handle multi-served image src
 		each(options.multi, function(object){
 			if(object.width >= window.screen.width) {
@@ -59,11 +60,18 @@
 				return false;
 			}
 		});
-		
+
 		// start lazy load
-		initialize();	
+		initialize();
   	}
-	
+
+	Blazy.prototype.fastConnection = function() {
+		fastConnection = false;
+	};
+	Blazy.prototype.fastConnection = function() {
+		fastConnection = true;
+	};
+
 	// public functions
 	Blazy.prototype.revalidate = function() {
  		initialize();
@@ -84,7 +92,7 @@
 		images.length = 0;
 		destroyed = true;
 	};
-	
+
 	// private helper functions
 	function validate() {
 		for(var i = 0; i<count; i++){
@@ -96,20 +104,20 @@
  				images.splice(i, 1);
  				count--;
  				i--;
- 			} 
+ 			}
  		}
 		if(count === 0) {
 			Blazy.prototype.destroy();
 		}
 	}
-	
+
 	function loadImage(ele){
 		// if element is visible
 		if(ele.offsetWidth > 0 && ele.offsetHeight > 0) {
 			var dataSrc = ele.getAttribute(source) || ele.getAttribute(options.src); // fallback to default data-src
 			if(dataSrc) {
 				var dataSrcSplitted = dataSrc.split(options.separator);
-				var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
+				var src = dataSrcSplitted[fastConnection && isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
 				var img = new Image();
 				// cleanup markup, remove data source attributes
 				each(options.multi, function(object){
@@ -119,11 +127,11 @@
 				img.onerror = function() {
 					if(options.error) options.error(ele, "invalid");
 					ele.className = ele.className + ' ' + options.errorClass;
-				} 
+				}
 				img.onload = function() {
 					// Is element an image or should we add the src as a background image?
-			      	ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.setAttribute('style', 'background-image: url("' + src + '");');	
-					ele.className = ele.className + ' ' + options.successClass;	
+			      	ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.setAttribute('style', 'background-image: url("' + src + '");');
+					ele.className = ele.className + ' ' + options.successClass;
 					if(options.success) options.success(ele);
 				}
 				img.src = src; //preload image
@@ -133,15 +141,15 @@
 			}
 		}
 	 }
-			
+
 	function elementInView(ele) {
 		var rect = ele.getBoundingClientRect();
 		var bottomline = winHeight + options.offset;
-		
+
 	    return (
 		 // inside horizontal view
 			rect.left >= 0
-		 && rect.right <= winWidth + options.offset	 
+		 && rect.right <= winWidth + options.offset
 		 && (
 		 // from top to bottom
 			rect.top  >= 0
@@ -152,24 +160,24 @@
 			)
 	 	);
 	 }
-	 
+
 	 function isElementLoaded(ele) {
 		 return (' ' + ele.className + ' ').indexOf(' ' + options.successClass + ' ') !== -1;
 	 }
-	 
+
 	 function createImageArray(selector) {
  		var nodelist 	= document.querySelectorAll(selector);
  		count 			= nodelist.length;
  		//converting nodelist to array
  		for(var i = count; i--; images.unshift(nodelist[i])){};
 	 }
-	 
+
 	 function saveWinOffset(){
 		 var html = document.documentElement;
 		 winHeight = window.innerHeight || html.clientHeight;
 		 winWidth = window.innerWidth || html.clientWidth;
 	 }
-	 
+
 	 function initialize(){
 		// First we create an array of images to lazy load
 		createImageArray(options.selector);
@@ -186,9 +194,9 @@
 	 		bindEvent(window, 'resize', saveWinOffsetT);
 		}
 		// And finally, we start to lazy load. Should bLazy ensure domready?
-		validate();	
+		validate();
 	 }
-	 
+
 	 function bindEvent(ele, type, fn) {
        if (ele.attachEvent) {
          ele.attachEvent && ele.attachEvent('on' + type, fn);
@@ -196,7 +204,7 @@
          ele.addEventListener(type, fn, false);
        }
      }
-	 
+
 	 function unbindEvent(ele, type, fn) {
        if (ele.detachEvent) {
          ele.detachEvent && ele.detachEvent('on' + type, fn);
@@ -204,14 +212,14 @@
          ele.removeEventListener(type, fn, false);
        }
      }
-	 
+
 	 function each(object, fn){
  		if(object && fn) {
  			var _count = object.length;
  			for(var i = 0; i<_count && fn(object[i], i) !== false; i++){}
  		}
 	 }
-	 
+
 	 function throttle(fn, minDelay) {
      	var lastCall = 0;
        	return function() {
@@ -223,7 +231,7 @@
          	fn.apply(this, arguments);
        	};
 	 }
-  	
+
 	 return Blazy;
-			  
+
 })(window, document);
