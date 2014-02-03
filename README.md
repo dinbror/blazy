@@ -14,6 +14,9 @@ http://dinbror.dk/blog/blazy
 bLazy is a lightweight script for lazy loading and multi-serving images (less than 1.2KB minified and gzipped). It’s written in pure JavaScript why it doesn’t depend on 3rd-party libraries such as jQuery. 
 It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data usage if he/she doesn't browse the whole page. 
 
+### LICENSE: ###
+bLazy is licensed under the DWIWYWBPVMS license. (Do With It What You Want But Please Visit My Sponsor).
+
 ## CHANGELOG
 ### v 1.1.3 (2014/01/21) ###
 * Fixed hardcoded retina check (isRetina = true).
