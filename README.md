@@ -15,7 +15,7 @@ bLazy is a lightweight script for lazy loading and multi-serving images (less th
 It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data usage if he/she doesn't browse the whole page. 
 
 ### LICENSE: ###
-bLazy is licensed under the DWIWYWBPVMS license. (Do With It What You Want But Please Visit My Sponsor).
+MIT
 
 ## CHANGELOG
 ### v 1.1.3 (2014/01/21) ###
