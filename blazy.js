@@ -141,13 +141,13 @@
 				img.onerror = function() {
 					if(options.error) options.error(ele, "invalid");
 					ele.className = ele.className + ' ' + options.errorClass;
-				} 
+				}; 
 				img.onload = function() {
 					// Is element an image or should we add the src as a background image?
-			      	ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.setAttribute('style', 'background-image: url("' + src + '");');	
+			      		ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.setAttribute('style', 'background-image: url("' + src + '");');	
 					ele.className = ele.className + ' ' + options.successClass;	
 					if(options.success) options.success(ele);
-				}
+				};
 				img.src = src; //preload image
 			} else {
 				if(options.error) options.error(ele, "missing");
