@@ -1,19 +1,38 @@
-hey, bLazy.js
+hey, be lazy
 =====
+bLazy.js is a lightweight script for lazy loading and multi-serving images (less than 1KB minified and gzipped). It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data loaded if he/she doesn't browse the whole page. 
 
-### DEMO: ###
+*Table of Contents*
+1. [Demo](https://github.com/dinbror/blazy#demo)
+2. [Howto & API](https://github.com/dinbror/blazy#howto)
+3. [Why be lazy?](https://github.com/dinbror/blazy#why-be-lazy)
+4. [Changelog](https://github.com/dinbror/blazy#changelog)
+5. [License](https://github.com/dinbror/blazy#license)
+
+## DEMO: ##
 http://dinbror.dk/blazy
 
 More examples will come. In the meantime you can play with a basic example at codepen:
 http://codepen.io/dinbror/pen/HzCAJ
 
-### API: ###
+## HOWTO & API: ##
 http://dinbror.dk/blog/blazy
 
-### DESCRIPTION: ###
-bLazy is a lightweight script for lazy loading and multi-serving images (less than 1KB minified and gzipped). It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data loaded if he/she doesn't browse the whole page. 
+## WHY BE LAZY?: ##
+* bLazy is used on big sites with millions of monthly visitors so it has been tested out in the real world.
+* bLazy is written in pure JavaScript why it doesn’t depend on 3rd-party libraries such as jQuery.
+* bLazy can lazy load all types of images including background images.
+* bLazy can lazy load images depending on screensize (multi-serve images).
+* bLazy can serve retina images on retina devices.
+* bLazy is lightweight, less than 1.2KB and less than 1.05KB if you don't need IE7- support.
+* bLazy is AMD compatible.
 
 ## CHANGELOG
+### v 1.2.0 (2014/02/15) ###
+* Important note: renamed option multi to `breakpoints` because it's much more descriptive.
+* Added [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) support.
+* Minor refactoring.
+
 ### v 1.1.3 (2014/01/21) ###
 * Fixed hardcoded retina check (isRetina = true).
 * Fixed "Uncaught TypeError" when data-src is null. Instead it'll trigger the `error` callback.
@@ -52,3 +71,6 @@ bLazy is a lightweight script for lazy loading and multi-serving images (less th
 * Performance improvements.
 * Added throttle function to ensure that we don't call resize/scroll functions too often.
 * Cleaning image markup when image has loaded.
+
+##LICENSE:##
+MIT

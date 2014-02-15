@@ -1,20 +1,23 @@
 /*!
-  [be]Lazy.js - v1.1.3 - 2014.01.21
+  hey, [be]Lazy.js - v1.2.0 - 2014.02.15 
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
-;var Blazy = (function(window, document) {
+;(function(bLazyJS) {
+	if (typeof define === 'function' && define.amd) {
+        	// Register bLazy as an AMD module
+        	define(bLazyJS);
+	} else {
+        	// Register bLazy on window
+        	window.Blazy = bLazyJS();
+	}
+})(function () {
 	'use strict';
 	
 	//vars
-	var source, options, winWidth, winHeight, isRetina;
-	var destroyed = true;
-	var count = 0;
-	var images = [];
-	
+	var source, options, winWidth, winHeight, images, count, isRetina, destroyed;
 	//throttle vars
-	var validateT;
-	var saveWinOffsetT;
+	var validateT, saveWinOffsetT;
 	
 	// constructor
 	function Blazy(settings) {
@@ -26,34 +29,34 @@
 				for (i=r.length; i--;) {
 					s.addRule(r[i], 'k:v');
 					for (j=a.length; j--;) a[j].currentStyle.k && c.push(a[j]);
-					s.removeRule(0);
+						s.removeRule(0);
 				}
 				return c;
 			};
 		}
-		
+		//init vars
+		destroyed 		= true;
+		images 			= [];
 		//options
-		options 				= settings 				|| {};
-		options.src				= options.src			|| 'data-src';
-		options.multi	 		= options.multi			|| false;
-		options.error	 		= options.error 		|| false;
-		options.offset			= options.offset 		|| 100;
-		options.success		 	= options.success 		|| false;
-	  	options.selector 		= options.selector 		|| '.b-lazy';
-		options.separator 		= options.separator 	|| '|';
-		options.container		= options.container 	?  document.querySelectorAll(options.container) : false;
-		options.errorClass 		= options.errorClass 	|| 'b-error';
+		options 		= settings 		|| {};
+		options.error	 	= options.error 	|| false;
+		options.offset		= options.offset 	|| 100;
+		options.success		= options.success 	|| false;
+	  	options.selector 	= options.selector 	|| '.b-lazy';
+		options.separator 	= options.separator 	|| '|';
+		options.container	= options.container 	?  document.querySelectorAll(options.container) : false;
+		options.errorClass 	= options.errorClass 	|| 'b-error';
+		options.breakpoints	= options.breakpoints	|| false;
 		options.successClass 	= options.successClass 	|| 'b-loaded';
-		source 					= options.src;
-		isRetina				= window.devicePixelRatio > 1;
+		options.src = source 	= options.src		|| 'data-src';
+		isRetina		= window.devicePixelRatio > 1;
 		//throttle, ensures that we don't call the functions too often
-		validateT				= throttle(validate, 20); 
-		saveWinOffsetT			= throttle(saveWinOffset, 50);
-		
+		validateT		= throttle(validate, 25); 
+		saveWinOffsetT		= throttle(saveWinOffset, 50);
+
 		saveWinOffset();		
-		
 		//handle multi-served image src
-		each(options.multi, function(object){
+		each(options.breakpoints, function(object){
 			if(object.width >= window.screen.width) {
 				source = object.src;
 				return false;
@@ -64,7 +67,8 @@
 		initialize();	
   	}
 	
-	// public functions
+	/* public functions
+	************************************/
 	Blazy.prototype.revalidate = function() {
  		initialize();
    	};
@@ -85,14 +89,32 @@
 		destroyed = true;
 	};
 	
-	// private helper functions
+	/* private helper functions
+	************************************/
+	function initialize(){
+		// First we create an array of images to lazy load
+		createImageArray(options.selector);
+		// Then we bind resize and scroll events if not already binded
+		if(destroyed) {
+			destroyed = false;
+			if(options.container) {
+	 			each(options.container, function(object){
+	 				bindEvent(object, 'scroll', validateT);
+	 			});
+	 		}
+	 		bindEvent(window, 'scroll', validateT);
+	 		bindEvent(window, 'resize', validateT);
+	 		bindEvent(window, 'resize', saveWinOffsetT);
+		}
+		// And finally, we start to lazy load. Should bLazy ensure domready?
+		validate();	
+	}
+	
 	function validate() {
 		for(var i = 0; i<count; i++){
 			var image = images[i];
-			var alreadyLoaded = isElementLoaded(image);
- 			if(elementInView(image) || alreadyLoaded) {
-				// If an image has already been loaded we won't do it again
-				if(!alreadyLoaded) loadImage(image);
+ 			if(elementInView(image) || isElementLoaded(image)) {
+				Blazy.prototype.load(image);
  				images.splice(i, 1);
  				count--;
  				i--;
@@ -112,7 +134,7 @@
 				var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
 				var img = new Image();
 				// cleanup markup, remove data source attributes
-				each(options.multi, function(object){
+				each(options.breakpoints, function(object){
 					ele.removeAttribute(object.src);
 				});
 				ele.removeAttribute(options.src);
@@ -140,17 +162,17 @@
 		
 	    return (
 		 // inside horizontal view
-			rect.left >= 0
+		 rect.left >= 0
 		 && rect.right <= winWidth + options.offset	 
 		 && (
 		 // from top to bottom
-			rect.top  >= 0
-		 	&& rect.top  <= bottomline
+		 rect.top  >= 0
+		 && rect.top  <= bottomline
 		 // from bottom to top
 		 || rect.bottom <= bottomline
-	 	    && rect.bottom >= 0 - options.offset
+	 	 	&& rect.bottom >= 0 - options.offset
 			)
-	 	);
+		);
 	 }
 	 
 	 function isElementLoaded(ele) {
@@ -165,65 +187,44 @@
 	 }
 	 
 	 function saveWinOffset(){
-		 var html = document.documentElement;
-		 winHeight = window.innerHeight || html.clientHeight;
-		 winWidth = window.innerWidth || html.clientWidth;
-	 }
-	 
-	 function initialize(){
-		// First we create an array of images to lazy load
-		createImageArray(options.selector);
-		// Then we bind events if not already binded
-		if(destroyed) {
-			destroyed = false;
-			if(options.container) {
-	 			each(options.container, function(object){
-	 				bindEvent(object, 'scroll', validateT);
-	 			});
-	 		}
-	 		bindEvent(window, 'scroll', validateT);
-	 		bindEvent(window, 'resize', validateT);
-	 		bindEvent(window, 'resize', saveWinOffsetT);
-		}
-		// And finally, we start to lazy load. Should bLazy ensure domready?
-		validate();	
+		 winHeight = window.innerHeight || document.documentElement.clientHeight;
+		 winWidth = window.innerWidth || document.documentElement.clientWidth;
 	 }
 	 
 	 function bindEvent(ele, type, fn) {
-       if (ele.attachEvent) {
-         ele.attachEvent && ele.attachEvent('on' + type, fn);
-       } else {
-         ele.addEventListener(type, fn, false);
-       }
-     }
+		 if (ele.attachEvent) {
+         		ele.attachEvent && ele.attachEvent('on' + type, fn);
+       	 	} else {
+         	       ele.addEventListener(type, fn, false);
+       		}
+	 }
 	 
 	 function unbindEvent(ele, type, fn) {
-       if (ele.detachEvent) {
-         ele.detachEvent && ele.detachEvent('on' + type, fn);
-       } else {
-         ele.removeEventListener(type, fn, false);
-       }
-     }
+		 if (ele.detachEvent) {
+         		ele.detachEvent && ele.detachEvent('on' + type, fn);
+       	 	} else {
+         	       ele.removeEventListener(type, fn, false);
+       		}
+	 }
 	 
 	 function each(object, fn){
  		if(object && fn) {
- 			var _count = object.length;
- 			for(var i = 0; i<_count && fn(object[i], i) !== false; i++){}
+ 			var l = object.length;
+ 			for(var i = 0; i<l && fn(object[i], i) !== false; i++){}
  		}
 	 }
 	 
 	 function throttle(fn, minDelay) {
-     	var lastCall = 0;
-       	return function() {
-        	var now = +new Date();
-         	if (now - lastCall < minDelay) {
-           		return;
-         	}
-         	lastCall = now;
-         	fn.apply(this, arguments);
-       	};
+     		 var lastCall = 0;
+		 return function() {
+			 var now = +new Date();
+         		 if (now - lastCall < minDelay) {
+           			 return;
+			 }
+         		 lastCall = now;
+         		 fn.apply(images, arguments);
+       		 };
 	 }
   	
 	 return Blazy;
-			  
-})(window, document);
+});
