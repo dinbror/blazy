@@ -1,6 +1,6 @@
 hey, be lazy
 =====
-bLazy.js is a lightweight script for lazy loading and multi-serving images (less than 1KB minified and gzipped). It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data loaded if he/she doesn't browse the whole page. 
+bLazy.js is a lightweight script for lazy loading and multi-serving images (less than 1.2KB minified and gzipped). It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data loaded if he/she doesn't browse the whole page. 
 
 **Table of Contents**<br>
 1. [Demo](https://github.com/dinbror/blazy#demo)<br>
