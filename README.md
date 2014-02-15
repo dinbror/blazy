@@ -4,21 +4,21 @@ bLazy is a lightweight script for lazy loading and multi-serving images (less th
 
 **Table of Contents**<br>
 1. [Demo](https://github.com/dinbror/blazy#demo)<br>
-2. [Howto & API](https://github.com/dinbror/blazy#howto--api)<br>
+2. [Howto & API](https://github.com/dinbror/blazy#how-to--api)<br>
 3. [Why be lazy?](https://github.com/dinbror/blazy#why-be-lazy)<br>
 4. [Changelog](https://github.com/dinbror/blazy#changelog)<br>
 5. [License](https://github.com/dinbror/blazy#license)<br>
 
-## DEMO: ##
+## DEMO ##
 http://dinbror.dk/blazy
 
 More examples will come. In the meantime you can play with a basic example at codepen:
 http://codepen.io/dinbror/pen/HzCAJ
 
-## HOWTO & API: ##
+## HOW TO & API ##
 http://dinbror.dk/blog/blazy
 
-## WHY BE LAZY?: ##
+## WHY BE LAZY? ##
 * bLazy is used on big sites with millions of monthly visitors so it has been tested out in the real world.
 * bLazy is written in pure JavaScript why it doesn’t depend on 3rd-party libraries such as jQuery.
 * bLazy can lazy load all types of images including background images.
