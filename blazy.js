@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.2.0 - 2014.02.15 
+  hey, [be]Lazy.js - v1.2.1 - 2014.03.23 
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -144,7 +144,7 @@
 				}; 
 				img.onload = function() {
 					// Is element an image or should we add the src as a background image?
-			      		ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.setAttribute('style', 'background-image: url("' + src + '");');	
+			      		ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';	
 					ele.className = ele.className + ' ' + options.successClass;	
 					if(options.success) options.success(ele);
 				};
@@ -183,7 +183,7 @@
  		var nodelist 	= document.querySelectorAll(selector);
  		count 			= nodelist.length;
  		//converting nodelist to array
- 		for(var i = count; i--; images.unshift(nodelist[i])){};
+ 		for(var i = count; i--; images.unshift(nodelist[i])){}
 	 }
 	 
 	 function saveWinOffset(){

@@ -28,6 +28,9 @@ http://dinbror.dk/blog/blazy
 * bLazy is AMD compatible.
 
 ## CHANGELOG
+### v 1.2.1 (2014/03/23) ###
+* When lazy loading background images it now only updates the background-image css attribute. Thanks Saku.
+
 ### v 1.2.0 (2014/02/15) ###
 * Important note: renamed option multi to `breakpoints` because it's much more descriptive.
 * Added [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) support.
