@@ -20,7 +20,7 @@ http://dinbror.dk/blog/blazy
 
 ### CDN
 
-`//cdn.jsdelivr.net/blazy/latest/mainfile` to link to the latest minified file on [jsDelivr](http://www.jsdelivr.com/#!blazy).
+`//cdn.jsdelivr.net/blazy/latest/blazy.min.js` to link to the latest minified file on [jsDelivr](http://www.jsdelivr.com/#!blazy).
 Exchange `latest` with the specific version number if you want to lock it in.
 
 ## WHY BE LAZY? ##
