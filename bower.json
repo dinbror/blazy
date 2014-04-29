@@ -1,0 +1,17 @@
+{
+  "name": "blazy",
+  "main": "blazy.js",
+  "version": "1.2.1",
+  "homepage": "https://github.com/dinbror/blazy",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
