@@ -23,6 +23,6 @@
 	],
 	"license": "MIT",
 	"moduleType": [
-    "amd"
-  ]
+    		"amd"
+  	]
 }
