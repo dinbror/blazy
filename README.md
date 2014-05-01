@@ -18,6 +18,11 @@ http://codepen.io/dinbror/pen/HzCAJ
 ## HOW TO & API ##
 http://dinbror.dk/blog/blazy
 
+### CDN
+If you don't want to host the script yourself you can link to the latest minified file:  
+`//cdn.jsdelivr.net/blazy/latest/blazy.min.js` on [jsDelivr](http://www.jsdelivr.com/#!blazy).
+Exchange `latest` with the specific version number if you want to lock it in.
+
 ## WHY BE LAZY? ##
 * bLazy is used on big sites with millions of monthly visitors so it has been tested out in the real world.
 * bLazy is written in pure JavaScript why it doesn’t depend on 3rd-party libraries such as jQuery.
