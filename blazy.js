@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.2.1 - 2014.03.23 
+  hey, [be]Lazy.js - v1.2.2 - 2014.05.04 
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -102,9 +102,9 @@
 	 				bindEvent(object, 'scroll', validateT);
 	 			});
 	 		}
+			bindEvent(window, 'resize', saveWinOffsetT);
+			bindEvent(window, 'resize', validateT);
 	 		bindEvent(window, 'scroll', validateT);
-	 		bindEvent(window, 'resize', validateT);
-	 		bindEvent(window, 'resize', saveWinOffsetT);
 		}
 		// And finally, we start to lazy load. Should bLazy ensure domready?
 		validate();	

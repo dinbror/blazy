@@ -33,6 +33,9 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy is AMD compatible.
 
 ## CHANGELOG
+### v 1.2.2 (2014/05/04) ###
+* Fixed [#15](https://github.com/dinbror/blazy/issues/15), when you resize the browser window in another tab bLazy didn't trigger new images in view. Thanks joshribakoff. 
+
 ### v 1.2.1 (2014/03/23) ###
 * When lazy loading background images it now only updates the background-image css attribute. Thanks Saku.
 
