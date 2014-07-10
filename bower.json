@@ -24,5 +24,6 @@
 	"license": "MIT",
 	"moduleType": [
     		"amd"
-  	]
+  	],
+  	"ignore": []
 }
