@@ -18,6 +18,8 @@
 	var source, options, winWidth, winHeight, images, count, isRetina, destroyed;
 	//throttle vars
 	var validateT, saveWinOffsetT;
+	//transitions
+	var transitionEvents = ['webkitTransitionEnd', 'oTransitionEnd', 'msTransitionEnd', 'transitionEnd'];
 	
 	// constructor
 	function Blazy(settings) {
@@ -79,6 +81,10 @@
 		if(options.container){
 			each(options.container, function(object){
 				unbindEvent(object, 'scroll', validateT);
+
+				for(var i = 0 ; i < transitionEvents.length; i++){
+					unbindEvent(object, transitionEvents[i], validateT);
+				}
 			});
 		}
 		unbindEvent(window, 'scroll', validateT);
@@ -100,6 +106,10 @@
 			if(options.container) {
 	 			each(options.container, function(object){
 	 				bindEvent(object, 'scroll', validateT);
+
+	 				for(var i = 0 ; i < transitionEvents.length; i++){
+	 					bindEvent(object, transitionEvents[i], validateT);
+	 				}
 	 			});
 	 		}
 			bindEvent(window, 'resize', saveWinOffsetT);
