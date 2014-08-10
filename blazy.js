@@ -47,6 +47,7 @@
 		options.container	= options.container 	?  document.querySelectorAll(options.container) : false;
 		options.errorClass 	= options.errorClass 	|| 'b-error';
 		options.breakpoints	= options.breakpoints	|| false;
+		options.loadingClass 	= options.loadingClass 	|| 'b-loading';
 		options.successClass 	= options.successClass 	|| 'b-loaded';
 		options.src = source 	= options.src		|| 'data-src';
 		isRetina		= window.devicePixelRatio > 1;
@@ -148,6 +149,7 @@
 					ele.className = ele.className + ' ' + options.successClass;	
 					if(options.success) options.success(ele);
 				};
+				ele.className = ele.className + ' ' + options.loadingClass;
 				img.src = src; //preload image
 			} else {
 				if(options.error) options.error(ele, "missing");
