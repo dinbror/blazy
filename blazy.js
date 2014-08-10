@@ -48,6 +48,7 @@
 		options.errorClass 	= options.errorClass 	|| 'b-error';
 		options.breakpoints	= options.breakpoints	|| false;
 		options.successClass 	= options.successClass 	|| 'b-loaded';
+		options.lateClass 	= options.lateClass 	|| 'b-late';
 		options.src = source 	= options.src		|| 'data-src';
 		isRetina		= window.devicePixelRatio > 1;
 		//throttle, ensures that we don't call the functions too often
@@ -182,8 +183,8 @@
 	 function createImageArray(selector) {
  		var nodelist 	= document.querySelectorAll(selector);
  		count 			= nodelist.length;
- 		//converting nodelist to array
- 		for(var i = count; i--; images.unshift(nodelist[i])){}
+ 		//converting nodelist to array, background images will be added to end 
+		if (nodelist[i].classList.contains(options.lateClass) || nodelist[i].nodeName.toLowerCase() !== 'img') {images.push(nodelist[i])} else {images.unshift(nodelist[i])}
 	 }
 	 
 	 function saveWinOffset(){
