@@ -183,7 +183,7 @@
  		var nodelist 	= document.querySelectorAll(selector);
  		count 			= nodelist.length;
  		//converting nodelist to array
- 		for(var i = count; i--; images.unshift(nodelist[i])){}
+ 		for(var i = count; i--; images.push(nodelist[i])){}
 	 }
 	 
 	 function saveWinOffset(){
