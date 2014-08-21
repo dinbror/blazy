@@ -111,9 +111,16 @@
 	}
 	
 	function validate() {
+		var viewport = {
+			top: 0 - options.offset,
+			right: winWidth + options.offset,
+			bottom: winHeight + options.offset,
+			left: 0 - options.offset
+		};
+        
 		for(var i = 0; i<count; i++){
 			var image = images[i];
- 			if(elementInView(image) || isElementLoaded(image)) {
+ 			if(elementInView(image, viewport) || isElementLoaded(image)) {
 				Blazy.prototype.load(image);
  				images.splice(i, 1);
  				count--;
@@ -155,25 +162,18 @@
 			}
 		}
 	 }
-			
-	function elementInView(ele) {
+	
+	function elementInView(ele, viewport) {
 		var rect = ele.getBoundingClientRect();
-		var bottomline = winHeight + options.offset;
-		
-	    return (
-		 // inside horizontal view
-		 rect.left >= 0
-		 && rect.right <= winWidth + options.offset	 
-		 && (
-		 // from top to bottom
-		 rect.top  >= 0
-		 && rect.top  <= bottomline
-		 // from bottom to top
-		 || rect.bottom <= bottomline
-	 	 	&& rect.bottom >= 0 - options.offset
-			)
+
+		// check intersection
+		return (
+			rect.right >= viewport.left
+			&& rect.bottom >= viewport.top
+			&& rect.left <= viewport.right
+			&& rect.top <= viewport.bottom
 		);
-	 }
+	}
 	 
 	 function isElementLoaded(ele) {
 		 return (' ' + ele.className + ' ').indexOf(' ' + options.successClass + ' ') !== -1;
