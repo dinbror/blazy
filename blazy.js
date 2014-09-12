@@ -19,7 +19,7 @@
 	//throttle vars
 	var validateT, saveWinOffsetT;
 	//transitions
-	var transitionEvents = ['webkitTransitionEnd', 'oTransitionEnd', 'msTransitionEnd', 'transitionEnd'];
+	var transitionEvents = ['webkitTransitionEnd', 'oTransitionEnd', 'msTransitionEnd', 'transitionend'];
 	
 	// constructor
 	function Blazy(settings) {
