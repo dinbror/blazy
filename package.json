@@ -1,0 +1,11 @@
+{
+  "name": "blazy",
+  "version": "1.0.0",
+  "description": "NPM version for blazy (responsive js image loader) ",
+  "main": "blazy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "YoYurec <yoyurec@gmail.com>",
+  "license": "ISC"
+}
