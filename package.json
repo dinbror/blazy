@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "YoYurec <yoyurec@gmail.com>",
-  "license": "ISC"
+  "author": {
+    "name": "dinbror",
+    "url": "https://github.com/dinbror"
+  },
+  "license": "ISC",
+  "maintainers": "YoYurec <yoyurec@gmail.com>"
 }
