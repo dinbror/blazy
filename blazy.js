@@ -72,8 +72,8 @@
 	Blazy.prototype.revalidate = function() {
  		initialize();
    	};
-	Blazy.prototype.load = function(element){
-		if(!isElementLoaded(element)) loadImage(element);
+	Blazy.prototype.load = function(element, force){
+		if(!isElementLoaded(element)) loadImage(element, force);
 	};
 	Blazy.prototype.destroy = function(){
 		if(options.container){
@@ -125,9 +125,9 @@
 		}
 	}
 	
-	function loadImage(ele){
+	function loadImage(ele, force){
 		// if element is visible
-		if(ele.offsetWidth > 0 && ele.offsetHeight > 0) {
+		if ((ele.offsetWidth > 0 && ele.offsetHeight > 0) || (force === true)) {
 			var dataSrc = ele.getAttribute(source) || ele.getAttribute(options.src); // fallback to default data-src
 			if(dataSrc) {
 				var dataSrcSplitted = dataSrc.split(options.separator);
