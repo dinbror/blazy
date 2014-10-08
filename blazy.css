@@ -1,0 +1,28 @@
+.b-lazy {
+  -webkit-transition: opacity 500ms ease-in-out;
+  -moz-transition: opacity 500ms ease-in-out;
+  -o-transition: opacity 500ms ease-in-out;
+  transition: opacity 500ms ease-in-out;
+  max-width: 100%;
+  opacity: 0;
+}
+.b-lazy.b-loaded {
+  opacity: 1;
+}
+
+.loading-bar{
+	position: absolute;
+	height: 5px;
+	background: none repeat scroll 0% 0% #F00;
+	top: 0px;
+	left: 0px;
+	z-index: 99;
+	opacity: 1;
+	-webkit-transition: opacity 500ms ease-in-out;
+  -moz-transition: opacity 500ms ease-in-out;
+  -o-transition: opacity 500ms ease-in-out;
+  transition: opacity 500ms ease-in-out;
+}
+.loading-bar.end{
+	opacity: 0;
+}
