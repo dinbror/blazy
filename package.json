@@ -6,10 +6,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": {
-    "name": "dinbror",
-    "url": "https://github.com/dinbror"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoyurec/blazy.git"
   },
-  "license": "ISC",
-  "maintainers": "YoYurec <yoyurec@gmail.com>"
+  "bugs": {
+    "url": "https://github.com/yoyurec/blazy/issues"
+  },
+  "homepage": "https://github.com/yoyurec/blazy"
+}
+"author":
+{
+"name": "dinbror",
+"url": "https://github.com/dinbror"
+},
+"license": "ISC",
+"maintainers": "YoYurec <yoyurec@gmail.com>"
 }
