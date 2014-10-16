@@ -1,0 +1,23 @@
+{
+  "name": "blazy",
+  "version": "1.0.2",
+  "description": "NPM version for blazy (responsive js image loader) ",
+  "main": "blazy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoyurec/blazy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yoyurec/blazy/issues"
+  },
+  "homepage": "https://github.com/yoyurec/blazy"
+  "author": {
+    "name": "dinbror",
+    "url": "https://github.com/dinbror"
+  },
+  "license": "ISC",
+  "maintainers": "YoYurec <yoyurec@gmail.com>"
+}
