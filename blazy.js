@@ -66,7 +66,10 @@
 				
 		//handle multi-served image src
 		each(options.breakpoints, function(object){
-			if(object.width >= window.screen.width) {
+			var mode = object.mode || 'screen';
+			var width = mode == 'viewport' ? document.documentElement.clientWidth : window.screen.width;
+
+			if(object.width >= width) {
 				source = object.src;
 				return false;
 			}
