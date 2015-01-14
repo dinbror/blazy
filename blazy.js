@@ -47,6 +47,7 @@
 		options.container	= options.container 	?  document.querySelectorAll(options.container) : false;
 		options.errorClass 	= options.errorClass 	|| 'b-error';
 		options.breakpoints	= options.breakpoints	|| false;
+		options.loadingbar  = options.loadingbar    || false;
 		options.successClass 	= options.successClass 	|| 'b-loaded';
 		options.src = source 	= options.src		|| 'data-src';
 		isRetina		= window.devicePixelRatio > 1;
@@ -132,46 +133,65 @@
 			if(dataSrc) {
 				var dataSrcSplitted = dataSrc.split(options.separator);
 				var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
+				var parent = ele.parentNode;
+				var loadingBar = document.createElement( 'div' );
 				var img = new Image();
+				img.src = src; //preload image
+				
 				// cleanup markup, remove data source attributes
 				each(options.breakpoints, function(object){
 					ele.removeAttribute(object.src);
 				});
 				ele.removeAttribute(options.src);
-				img.onerror = function() {
+					    
+		        var req = new XMLHttpRequest();
+		        req.onloadstart = function(){
+		        	if(options.loadingbar){
+		        		loadingBar.className = "loading-bar";
+		        		loadingBar.style.width="1%";
+		        		parent.appendChild(loadingBar);
+		        	}
+		        	
+		        }
+		        req.onerror = function() {
 					if(options.error) options.error(ele, "invalid");
 					ele.className = ele.className + ' ' + options.errorClass;
 				}; 
-				img.onload = function() {
-					// Is element an image or should we add the src as a background image?
-			      		ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';	
+		        req.onprogress = function(evt) {
+
+		          if (evt.lengthComputable) 
+		          {
+		            var percentComplete = (evt.loaded / evt.total) * 100;
+		            loadingBar.style.width=percentComplete+"%";
+		          }
+		        };		        
+		        req.onloadend = function () {
+		        	// Is element an image or should we add the src as a background image?
+			      	ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';	
 					ele.className = ele.className + ' ' + options.successClass;	
 					if(options.success) options.success(ele);
-				};
-				img.src = src; //preload image
+					if (options.loadingbar) parent.removeChild(loadingBar);
+	        	}
+		        req.open("GET", src, true);
+		        req.send();				
 			} else {
 				if(options.error) options.error(ele, "missing");
 				ele.className = ele.className + ' ' + options.errorClass;
 			}
 		}
-	 }
-			
+	}
+		
 	function elementInView(ele) {
 		var rect = ele.getBoundingClientRect();
 		var bottomline = winHeight + options.offset;
 		
 	    return (
 		 // inside horizontal view
-		 rect.left >= 0
-		 && rect.right <= winWidth + options.offset	 
-		 && (
-		 // from top to bottom
-		 rect.top  >= 0
-		 && rect.top  <= bottomline
-		 // from bottom to top
-		 || rect.bottom <= bottomline
-	 	 	&& rect.bottom >= 0 - options.offset
-			)
+		 rect.left >= 0 && rect.right <= winWidth + options.offset	 && (
+		 	 // from top to bottom
+		 	rect.top  >= 0	 && rect.top  <= bottomline	 // from bottom to top
+		 	|| rect.bottom <= bottomline && rect.bottom >= 0 - options.offset
+		 )
 		);
 	 }
 	 
