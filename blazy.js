@@ -49,10 +49,13 @@
 		options.breakpoints	= options.breakpoints	|| false;
 		options.successClass 	= options.successClass 	|| 'b-loaded';
 		options.src = source 	= options.src		|| 'data-src';
+		options.validateDelay	= options.validateDelay	|| 25;
+		options.saveWinOffsetDelay	= options.saveWinOffsetDelay	|| 50;
+		
 		isRetina		= window.devicePixelRatio > 1;
 		//throttle, ensures that we don't call the functions too often
-		validateT		= throttle(validate, 25); 
-		saveWinOffsetT		= throttle(saveWinOffset, 50);
+		validateT		= throttle(validate, options.validateDelay); 
+		saveWinOffsetT		= throttle(saveWinOffset, options.saveWinOffsetDelay);
 
 		saveWinOffset();		
 		//handle multi-served image src
