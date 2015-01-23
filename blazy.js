@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.2.2 - 2014.05.04 
+  hey, [be]Lazy.js - v1.3.0 - 2015.01.23 
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -15,9 +15,9 @@
 	'use strict';
 	
 	//vars
-	var source, options, winWidth, winHeight, images, count, isRetina, destroyed;
+	var source, options, viewport, images, count, isRetina, destroyed;
 	//throttle vars
-	var validateT, saveWinOffsetT;
+	var validateT, saveViewportOffsetT;
 	
 	// constructor
 	function Blazy(settings) {
@@ -35,26 +35,30 @@
 			};
 		}
 		//init vars
-		destroyed 		= true;
-		images 			= [];
+		destroyed 				= true;
+		images 					= [];
+		viewport				= {};
 		//options
-		options 		= settings 		|| {};
-		options.error	 	= options.error 	|| false;
-		options.offset		= options.offset 	|| 100;
-		options.success		= options.success 	|| false;
-	  	options.selector 	= options.selector 	|| '.b-lazy';
-		options.separator 	= options.separator 	|| '|';
-		options.container	= options.container 	?  document.querySelectorAll(options.container) : false;
-		options.errorClass 	= options.errorClass 	|| 'b-error';
-		options.breakpoints	= options.breakpoints	|| false;
+		options 				= settings 				|| {};
+		options.error	 		= options.error 		|| false;
+		options.offset			= options.offset 		|| 100;
+		options.success			= options.success 		|| false;
+	  	options.selector 		= options.selector 		|| '.b-lazy';
+		options.separator 		= options.separator 	|| '|';
+		options.container		= options.container 	?  document.querySelectorAll(options.container) : false;
+		options.errorClass 		= options.errorClass 	|| 'b-error';
+		options.breakpoints		= options.breakpoints	|| false;
 		options.successClass 	= options.successClass 	|| 'b-loaded';
-		options.src = source 	= options.src		|| 'data-src';
-		isRetina		= window.devicePixelRatio > 1;
+		options.src = source 	= options.src			|| 'data-src';
+		isRetina				= window.devicePixelRatio > 1;
+		viewport.top 			= 0 - options.offset;
+		viewport.left 			= 0 - options.offset;
 		//throttle, ensures that we don't call the functions too often
-		validateT		= throttle(validate, 25); 
-		saveWinOffsetT		= throttle(saveWinOffset, 50);
+		validateT				= throttle(validate, 25); 
+		saveViewportOffsetT			= throttle(saveViewportOffset, 50);
 
-		saveWinOffset();		
+		saveViewportOffset();	
+				
 		//handle multi-served image src
 		each(options.breakpoints, function(object){
 			if(object.width >= window.screen.width) {
@@ -72,8 +76,8 @@
 	Blazy.prototype.revalidate = function() {
  		initialize();
    	};
-	Blazy.prototype.load = function(element){
-		if(!isElementLoaded(element)) loadImage(element);
+	Blazy.prototype.load = function(element, force){
+		if(!isElementLoaded(element)) loadImage(element, force);
 	};
 	Blazy.prototype.destroy = function(){
 		if(options.container){
@@ -83,7 +87,7 @@
 		}
 		unbindEvent(window, 'scroll', validateT);
 		unbindEvent(window, 'resize', validateT);
-		unbindEvent(window, 'resize', saveWinOffsetT);
+		unbindEvent(window, 'resize', saveViewportOffsetT);
 		count = 0;
 		images.length = 0;
 		destroyed = true;
@@ -102,7 +106,7 @@
 	 				bindEvent(object, 'scroll', validateT);
 	 			});
 	 		}
-			bindEvent(window, 'resize', saveWinOffsetT);
+			bindEvent(window, 'resize', saveViewportOffsetT);
 			bindEvent(window, 'resize', validateT);
 	 		bindEvent(window, 'scroll', validateT);
 		}
@@ -125,9 +129,9 @@
 		}
 	}
 	
-	function loadImage(ele){
+	function loadImage(ele, force){
 		// if element is visible
-		if(ele.offsetWidth > 0 && ele.offsetHeight > 0) {
+		if(force || (ele.offsetWidth > 0 && ele.offsetHeight > 0)) {
 			var dataSrc = ele.getAttribute(source) || ele.getAttribute(options.src); // fallback to default data-src
 			if(dataSrc) {
 				var dataSrcSplitted = dataSrc.split(options.separator);
@@ -158,21 +162,14 @@
 			
 	function elementInView(ele) {
 		var rect = ele.getBoundingClientRect();
-		var bottomline = winHeight + options.offset;
 		
-	    return (
-		 // inside horizontal view
-		 rect.left >= 0
-		 && rect.right <= winWidth + options.offset	 
-		 && (
-		 // from top to bottom
-		 rect.top  >= 0
-		 && rect.top  <= bottomline
-		 // from bottom to top
-		 || rect.bottom <= bottomline
-	 	 	&& rect.bottom >= 0 - options.offset
-			)
-		);
+		return (
+			// Intersection
+			rect.right >= viewport.left
+			&& rect.bottom >= viewport.top
+			&& rect.left <= viewport.right
+			&& rect.top <= viewport.bottom
+		 );
 	 }
 	 
 	 function isElementLoaded(ele) {
@@ -186,9 +183,9 @@
  		for(var i = count; i--; images.unshift(nodelist[i])){}
 	 }
 	 
-	 function saveWinOffset(){
-		 winHeight = window.innerHeight || document.documentElement.clientHeight;
-		 winWidth = window.innerWidth || document.documentElement.clientWidth;
+	 function saveViewportOffset(){
+		 viewport.bottom = (window.innerHeight || document.documentElement.clientHeight) + options.offset;
+		 viewport.right = (window.innerWidth || document.documentElement.clientWidth) + options.offset;
 	 }
 	 
 	 function bindEvent(ele, type, fn) {

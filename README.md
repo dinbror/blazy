@@ -33,6 +33,10 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy is AMD compatible.
 
 ## CHANGELOG
+### v 1.3.0 (2015/01/23) ###
+* Fixed [#34](https://github.com/dinbror/blazy/issues/34). Expanded public `load` function with force attribute, so you can force hidden images to be loaded.
+* Fixed [#24](https://github.com/dinbror/blazy/issues/24), [#32](https://github.com/dinbror/blazy/issues/32) and [#35](https://github.com/dinbror/blazy/issues/35). Updated "elementInView" function with intersection check. Thanks a lot @teohhanhui.  
+
 ### v 1.2.2 (2014/05/04) ###
 * Fixed [#15](https://github.com/dinbror/blazy/issues/15), when you resize the browser window in another tab bLazy didn't trigger new images in view. Thanks joshribakoff. 
 
