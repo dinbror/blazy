@@ -1,17 +1,22 @@
 /*!
-  hey, [be]Lazy.js - v1.3.0 - 2015.01.23 
+  hey, [be]Lazy.js - v1.3.1 - 2015.02.01 
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
-;(function(bLazyJS) {
+;(function(root, blazy) {
 	if (typeof define === 'function' && define.amd) {
-        	// Register bLazy as an AMD module
-        	define(bLazyJS);
+        // AMD. Register bLazy as an anonymous module
+        define(blazy);
+	} else if (typeof exports === 'object') {
+		// Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node. 
+		module.exports = blazy();
 	} else {
-        	// Register bLazy on window
-        	window.Blazy = bLazyJS();
+        // Browser globals. Register bLazy on window
+        root.Blazy = blazy();
 	}
-})(function () {
+})(this, function () {
 	'use strict';
 	
 	//vars

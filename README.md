@@ -30,9 +30,12 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy can lazy load images depending on screensize (multi-serve images).
 * bLazy can serve retina images on retina devices.
 * bLazy is lightweight, less than 1.2KB and less than 1.05KB if you don't need IE7- support.
-* bLazy is AMD compatible.
+* bLazy is AMD, CommonJS and Browser globals compatible.
 
 ## CHANGELOG
+### v 1.3.1 (2015/02/01) ###
+* Added support for CommonJS-like environments that support module.exports like [node](http://nodejs.org/). 
+
 ### v 1.3.0 (2015/01/23) ###
 * Fixed [#34](https://github.com/dinbror/blazy/issues/34). Expanded public `load` function with force attribute, so you can force hidden images to be loaded.
 * Fixed [#24](https://github.com/dinbror/blazy/issues/24), [#32](https://github.com/dinbror/blazy/issues/32) and [#35](https://github.com/dinbror/blazy/issues/35). Updated "elementInView" function with intersection check. Thanks a lot @teohhanhui.  
