@@ -146,12 +146,15 @@
 				each(options.breakpoints, function(object){
 					ele.removeAttribute(object.src);
 				});
-				ele.removeAttribute(options.src);
 				img.onerror = function() {
+					// remove original src whether the new one is a success or not (could be made optional)
+					ele.removeAttribute(options.src);
 					if(options.error) options.error(ele, "invalid");
 					ele.className = ele.className + ' ' + options.errorClass;
 				}; 
 				img.onload = function() {
+					// remove original src whether the new one is a success or not
+					ele.removeAttribute(options.src);
 					// Is element an image or should we add the src as a background image?
 			      		ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';	
 					ele.className = ele.className + ' ' + options.successClass;	
@@ -159,6 +162,8 @@
 				};
 				img.src = src; //preload image
 			} else {
+				// remove original src whether the new one is a success or not (could be made optional)
+				ele.removeAttribute(options.src);
 				if(options.error) options.error(ele, "missing");
 				ele.className = ele.className + ' ' + options.errorClass;
 			}
