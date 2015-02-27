@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.3.1 - 2015.02.01 
+  hey, [be]Lazy.js - v1.3.1 - 2015.02.01
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -10,7 +10,7 @@
 	} else if (typeof exports === 'object') {
 		// Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
-        // like Node. 
+        // like Node.
 		module.exports = blazy();
 	} else {
         // Browser globals. Register bLazy on window
@@ -18,12 +18,12 @@
 	}
 })(this, function () {
 	'use strict';
-	
+
 	//vars
 	var source, options, viewport, images, count, isRetina, destroyed;
 	//throttle vars
 	var validateT, saveViewportOffsetT;
-	
+
 	// constructor
 	function Blazy(settings) {
 		//IE7- fallback for missing querySelectorAll support
@@ -59,11 +59,11 @@
 		viewport.top 			= 0 - options.offset;
 		viewport.left 			= 0 - options.offset;
 		//throttle, ensures that we don't call the functions too often
-		validateT				= throttle(validate, 25); 
+		validateT				= throttle(validate, 25);
 		saveViewportOffsetT			= throttle(saveViewportOffset, 50);
 
-		saveViewportOffset();	
-				
+		saveViewportOffset();
+
 		//handle multi-served image src
 		each(options.breakpoints, function(object){
 			if(object.width >= window.screen.width) {
@@ -71,11 +71,11 @@
 				return false;
 			}
 		});
-		
+
 		// start lazy load
-		initialize();	
+		initialize();
   	}
-	
+
 	/* public functions
 	************************************/
 	Blazy.prototype.revalidate = function() {
@@ -97,7 +97,7 @@
 		images.length = 0;
 		destroyed = true;
 	};
-	
+
 	/* private helper functions
 	************************************/
 	function initialize(){
@@ -116,9 +116,9 @@
 	 		bindEvent(window, 'scroll', validateT);
 		}
 		// And finally, we start to lazy load. Should bLazy ensure domready?
-		validate();	
+		validate();
 	}
-	
+
 	function validate() {
 		for(var i = 0; i<count; i++){
 			var image = images[i];
@@ -127,13 +127,13 @@
  				images.splice(i, 1);
  				count--;
  				i--;
- 			} 
+ 			}
  		}
 		if(count === 0) {
 			Blazy.prototype.destroy();
 		}
 	}
-	
+
 	function loadImage(ele, force){
 		// if element is visible
 		if(force || (ele.offsetWidth > 0 && ele.offsetHeight > 0)) {
@@ -147,15 +147,15 @@
 					ele.removeAttribute(object.src);
 				});
 				ele.removeAttribute(options.src);
-				img.onerror = function() {
-					if(options.error) options.error(ele, "invalid");
+				img.onerror = function(event) {
+                    if(options.error) options.error(ele, "invalid", src, event);
 					ele.className = ele.className + ' ' + options.errorClass;
-				}; 
-				img.onload = function() {
+				};
+				img.onload = function(event) {
 					// Is element an image or should we add the src as a background image?
-			      		ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';	
-					ele.className = ele.className + ' ' + options.successClass;	
-					if(options.success) options.success(ele);
+			      		ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';
+					ele.className = ele.className + ' ' + options.successClass;
+                    if(options.success) options.success(ele, src, event);
 				};
 				img.src = src; //preload image
 			} else {
@@ -164,10 +164,10 @@
 			}
 		}
 	 }
-			
+
 	function elementInView(ele) {
 		var rect = ele.getBoundingClientRect();
-		
+
 		return (
 			// Intersection
 			rect.right >= viewport.left
@@ -176,23 +176,23 @@
 			&& rect.top <= viewport.bottom
 		 );
 	 }
-	 
+
 	 function isElementLoaded(ele) {
 		 return (' ' + ele.className + ' ').indexOf(' ' + options.successClass + ' ') !== -1;
 	 }
-	 
+
 	 function createImageArray(selector) {
  		var nodelist 	= document.querySelectorAll(selector);
  		count 			= nodelist.length;
  		//converting nodelist to array
  		for(var i = count; i--; images.unshift(nodelist[i])){}
 	 }
-	 
+
 	 function saveViewportOffset(){
 		 viewport.bottom = (window.innerHeight || document.documentElement.clientHeight) + options.offset;
 		 viewport.right = (window.innerWidth || document.documentElement.clientWidth) + options.offset;
 	 }
-	 
+
 	 function bindEvent(ele, type, fn) {
 		 if (ele.attachEvent) {
          		ele.attachEvent && ele.attachEvent('on' + type, fn);
@@ -200,7 +200,7 @@
          	       ele.addEventListener(type, fn, false);
        		}
 	 }
-	 
+
 	 function unbindEvent(ele, type, fn) {
 		 if (ele.detachEvent) {
          		ele.detachEvent && ele.detachEvent('on' + type, fn);
@@ -208,14 +208,14 @@
          	       ele.removeEventListener(type, fn, false);
        		}
 	 }
-	 
+
 	 function each(object, fn){
  		if(object && fn) {
  			var l = object.length;
  			for(var i = 0; i<l && fn(object[i], i) !== false; i++){}
  		}
 	 }
-	 
+
 	 function throttle(fn, minDelay) {
      		 var lastCall = 0;
 		 return function() {
@@ -227,6 +227,6 @@
          		 fn.apply(images, arguments);
        		 };
 	 }
-  	
+
 	 return Blazy;
 });
