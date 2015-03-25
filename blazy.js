@@ -23,6 +23,8 @@
 	var source, options, viewport, images, count, isRetina, destroyed;
 	//throttle vars
 	var validateT, saveViewportOffsetT;
+	// breakpoint-switch detection
+	var previousBreakpoint;
 	
 	// constructor
 	function Blazy(settings) {
@@ -120,6 +122,10 @@
 	}
 	
 	function validate() {
+		if (options.breakpoints && options.breakpoints.length) {
+			handleResize(); // check if jumped across a breakpoint
+		}
+
 		for(var i = 0; i<count; i++){
 			var image = images[i];
  			if(elementInView(image) || isElementLoaded(image)) {
@@ -134,6 +140,56 @@
 		}
 	}
 	
+	function getViewportWidth(mode) {
+		var width,
+		    d = document.documentElement;
+		if (mode == 'viewport') {
+			width = d.clientWidth;
+		} else {
+			width = window.screen.width;
+		}
+		return width;
+	}
+
+	function activeBreakpoint() {
+		var object,
+		    target,
+		    width;
+
+		for (var i=options.breakpoints.length-1; i >= 0; i--) {
+			object = options.breakpoints[i];
+			width = getViewportWidth(object.mode);
+			if (width < object.width) {
+				target = object;
+			}
+		}
+
+		return target;
+	}
+
+	function handleResize() {
+		var previous,
+		    current,
+		    els;
+
+		// if no breakpoints defined, do nothing
+		if(options.breakpoints.length) {
+			// check if the resized jumped across a breakpoint
+			current = activeBreakpoint();
+			if (previousBreakpoint && current != previousBreakpoint) {
+				Blazy.prototype.destroy();
+				setTimeout(function() {
+					source = current.src;
+					each(document.querySelectorAll('.' + options.successClass), function(ele){
+						ele.className = ele.className.replace(new RegExp(options.successClass, 'g'), '');
+					});
+					initialize();
+				}, 100);
+			}
+			previousBreakpoint = current;
+		}
+	}
+
 	function loadImage(ele, force){
 		// if element is visible
 		if(force || (ele.offsetWidth > 0 && ele.offsetHeight > 0)) {
