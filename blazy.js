@@ -142,11 +142,6 @@
 				var dataSrcSplitted = dataSrc.split(options.separator);
 				var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
 				var img = new Image();
-				// cleanup markup, remove data source attributes
-				each(options.breakpoints, function(object){
-					ele.removeAttribute(object.src);
-				});
-				ele.removeAttribute(options.src);
 				img.onerror = function() {
 					if(options.error) options.error(ele, "invalid");
 					ele.className = ele.className + ' ' + options.errorClass;
