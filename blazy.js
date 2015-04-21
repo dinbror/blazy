@@ -22,7 +22,9 @@
 	//vars
 	var source, options, viewport, images, count, isRetina, destroyed;
 	//throttle vars
-	var validateT, saveViewportOffsetT;
+	var validateT, saveViewportOffsetT, handleResizeT;
+	// breakpoint-switch detection
+	var previousBreakpoint;
 	
 	// constructor
 	function Blazy(settings) {
@@ -61,6 +63,7 @@
 		//throttle, ensures that we don't call the functions too often
 		validateT				= throttle(validate, 25); 
 		saveViewportOffsetT			= throttle(saveViewportOffset, 50);
+		handleResizeT = throttle(handleResize, 25);
 
 		saveViewportOffset();	
 				
@@ -91,7 +94,7 @@
 			});
 		}
 		unbindEvent(window, 'scroll', validateT);
-		unbindEvent(window, 'resize', validateT);
+		unbindEvent(window, 'resize', handleResizeT);
 		unbindEvent(window, 'resize', saveViewportOffsetT);
 		count = 0;
 		images.length = 0;
@@ -112,8 +115,10 @@
 	 			});
 	 		}
 			bindEvent(window, 'resize', saveViewportOffsetT);
-			bindEvent(window, 'resize', validateT);
 	 		bindEvent(window, 'scroll', validateT);
+			if (options.breakpoints && options.breakpoints.length) {
+				bindEvent(window, 'resize', handleResizeT);
+			}
 		}
 		// And finally, we start to lazy load. Should bLazy ensure domready?
 		validate();	
@@ -134,6 +139,56 @@
 		}
 	}
 	
+	function getViewportWidth(mode) {
+		var width,
+		    d = document.documentElement;
+		if (mode == 'viewport') {
+			width = d.clientWidth;
+		} else {
+			width = window.screen.width;
+		}
+		return width;
+	}
+
+	function activeBreakpoint() {
+		var object,
+		    target,
+		    width;
+
+		for (var i=options.breakpoints.length-1; i >= 0; i--) {
+			object = options.breakpoints[i];
+			width = getViewportWidth(object.mode);
+			if (width < object.width) {
+				target = object;
+			}
+		}
+
+		return target;
+	}
+
+	function handleResize() {
+		var previous,
+		    current,
+		    els;
+
+		// if no breakpoints defined, do nothing
+		if(options.breakpoints.length) {
+			// check if the resized jumped across a breakpoint
+			current = activeBreakpoint();
+			if (previousBreakpoint && current != previousBreakpoint) {
+				Blazy.prototype.destroy();
+				setTimeout(function() {
+					source = current.src;
+					each(document.querySelectorAll('.' + options.successClass), function(ele){
+						ele.className = ele.className.replace(new RegExp(options.successClass, 'g'), '');
+					});
+					initialize();
+				}, 100);
+			}
+			previousBreakpoint = current;
+		}
+	}
+
 	function loadImage(ele, force){
 		// if element is visible
 		if(force || (ele.offsetWidth > 0 && ele.offsetHeight > 0)) {
@@ -142,11 +197,6 @@
 				var dataSrcSplitted = dataSrc.split(options.separator);
 				var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
 				var img = new Image();
-				// cleanup markup, remove data source attributes
-				each(options.breakpoints, function(object){
-					ele.removeAttribute(object.src);
-				});
-				ele.removeAttribute(options.src);
 				img.onerror = function() {
 					if(options.error) options.error(ele, "invalid");
 					ele.className = ele.className + ' ' + options.errorClass;
