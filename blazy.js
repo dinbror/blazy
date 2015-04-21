@@ -22,7 +22,7 @@
 	//vars
 	var source, options, viewport, images, count, isRetina, destroyed;
 	//throttle vars
-	var validateT, saveViewportOffsetT;
+	var validateT, saveViewportOffsetT, handleResizeT;
 	// breakpoint-switch detection
 	var previousBreakpoint;
 	
@@ -63,6 +63,7 @@
 		//throttle, ensures that we don't call the functions too often
 		validateT				= throttle(validate, 25); 
 		saveViewportOffsetT			= throttle(saveViewportOffset, 50);
+		handleResizeT = throttle(handleResize, 25);
 
 		saveViewportOffset();	
 				
@@ -93,7 +94,7 @@
 			});
 		}
 		unbindEvent(window, 'scroll', validateT);
-		unbindEvent(window, 'resize', validateT);
+		unbindEvent(window, 'resize', handleResizeT);
 		unbindEvent(window, 'resize', saveViewportOffsetT);
 		count = 0;
 		images.length = 0;
@@ -114,18 +115,16 @@
 	 			});
 	 		}
 			bindEvent(window, 'resize', saveViewportOffsetT);
-			bindEvent(window, 'resize', validateT);
 	 		bindEvent(window, 'scroll', validateT);
+			if (options.breakpoints && options.breakpoints.length) {
+				bindEvent(window, 'resize', handleResizeT);
+			}
 		}
 		// And finally, we start to lazy load. Should bLazy ensure domready?
 		validate();	
 	}
 	
 	function validate() {
-		if (options.breakpoints && options.breakpoints.length) {
-			handleResize(); // check if jumped across a breakpoint
-		}
-
 		for(var i = 0; i<count; i++){
 			var image = images[i];
  			if(elementInView(image) || isElementLoaded(image)) {
