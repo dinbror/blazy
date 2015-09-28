@@ -1,17 +1,19 @@
 {
   "name": "blazy",
-  "version": "1.3.1",
-  "description": "A lightweight script for lazy loading and multi-serving images.",
+  "version": "1.4.0",
+  "description": "A lightweight pure JavaScript script for lazy loading and multi-serving images.",
   "main": "blazy.js",
   "keywords": [
     "blazy",
+    "blazyjs",
+    "blazy.js",
     "lazy",
     "lazyload",
-	"image",
+    "image",
     "images",
     "retina",
     "responsive",
-	"performance"
+    "performance"
   ],
   "author": "Bjørn Klinggaard (http://dinbror.dk/blazy)",
   "repository": {
