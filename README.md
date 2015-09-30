@@ -4,7 +4,7 @@ bLazy is a lightweight script for lazy loading and multi-serving images (less th
 
 **Table of Contents**<br>
 1. [Demo](https://github.com/dinbror/blazy#demo)<br>
-2. [Howto & API](https://github.com/dinbror/blazy#how-to--api)<br>
+2. [Usage & API](https://github.com/dinbror/blazy#how-to--api)<br>
 3. [Why be lazy?](https://github.com/dinbror/blazy#why-be-lazy)<br>
 4. [Changelog](https://github.com/dinbror/blazy#changelog)<br>
 5. [License](https://github.com/dinbror/blazy#license)<br>
@@ -15,8 +15,18 @@ http://dinbror.dk/blazy
 More examples will come. In the meantime you can play with a basic example at codepen:
 http://codepen.io/dinbror/pen/HzCAJ
 
-## HOW TO & API ##
+## USAGE & API ##
 http://dinbror.dk/blog/blazy
+
+### INSTALL
+You can install blazy.js with npm:
+``` npm
+npm install blazy --save
+```
+or bower:
+``` bower
+bower install blazy --save
+```
 
 ### CDN
 If you don't want to host the script yourself you can link to the latest minified file:  
@@ -94,4 +104,4 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * Cleaning image markup when image has loaded.
 
 ##LICENSE:##
-MIT
+Copyright (c) 2013-15 Bjørn Klinggaard Licensed under the [The MIT License (MIT)](http://opensource.org/licenses/MIT).
