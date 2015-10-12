@@ -1,6 +1,6 @@
 {
   "name": "blazy",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A lightweight pure JavaScript script for lazy loading and multi-serving images.",
   "main": "blazy.js",
   "keywords": [

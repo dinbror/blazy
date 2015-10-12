@@ -1,6 +1,6 @@
 
 /*!
-  hey, [be]Lazy.js - v1.4.0 - 2015.09.28
+  hey, [be]Lazy.js - v1.4.1 - 2015.10.12
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -46,16 +46,16 @@
         util.images = [];
         util.destroyed = true;
         scope.options = options || {};
-        scope.options.error = options.error || false;
-        scope.options.offset = options.offset || 100;
-        scope.options.success = options.success || false;
-        scope.options.selector = options.selector || '.b-lazy';
-        scope.options.separator = options.separator || '|';
-        scope.options.container = options.container ? document.querySelectorAll(options.container) : false;
-        scope.options.errorClass = options.errorClass || 'b-error';
-        scope.options.breakpoints = options.breakpoints || false;
-        scope.options.successClass = options.successClass || 'b-loaded';
-        scope.options.src = source = options.src || 'data-src';
+        scope.options.error = scope.options.error || false;
+        scope.options.offset = scope.options.offset || 100;
+        scope.options.success = scope.options.success || false;
+        scope.options.selector = scope.options.selector || '.b-lazy';
+        scope.options.separator = scope.options.separator || '|';
+        scope.options.container = scope.options.container ? document.querySelectorAll(scope.options.container) : false;
+        scope.options.errorClass = scope.options.errorClass || 'b-error';
+        scope.options.breakpoints = scope.options.breakpoints || false;
+        scope.options.successClass = scope.options.successClass || 'b-loaded';
+        scope.options.src = source = scope.options.src || 'data-src';
         isRetina = window.devicePixelRatio > 1;
         viewport = {};
         viewport.top = 0 - scope.options.offset;
