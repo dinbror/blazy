@@ -4,7 +4,7 @@ bLazy is a lightweight script for lazy loading and multi-serving images (less th
 
 **Table of Contents**<br>
 1. [Demo](https://github.com/dinbror/blazy#demo)<br>
-2. [Howto & API](https://github.com/dinbror/blazy#how-to--api)<br>
+2. [Usage & API](https://github.com/dinbror/blazy#how-to--api)<br>
 3. [Why be lazy?](https://github.com/dinbror/blazy#why-be-lazy)<br>
 4. [Changelog](https://github.com/dinbror/blazy#changelog)<br>
 5. [License](https://github.com/dinbror/blazy#license)<br>
@@ -15,7 +15,7 @@ http://dinbror.dk/blazy
 More examples will come. In the meantime you can play with a basic example at codepen:
 http://codepen.io/dinbror/pen/HzCAJ
 
-## HOW TO & API ##
+## USAGE & API ##
 http://dinbror.dk/blog/blazy
 
 ### INSTALL
