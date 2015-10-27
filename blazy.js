@@ -191,7 +191,10 @@
     }
 
     function createImageArray(selector) {
-        return [].slice.call(document.querySelectorAll(selector));
+      if( Object.prototype.toString.call( selector ) === '[object Array]' ) {
+        return selector;
+      }
+      return [].slice.call(document.querySelectorAll(selector));
     }
 
     function saveViewportOffset(offset) {
