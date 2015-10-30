@@ -39,12 +39,19 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy can lazy load all types of images including background images.
 * bLazy can lazy load images depending on screensize (multi-serve images).
 * bLazy can serve retina images on retina devices.
+* bLazy can lazy load everything with a src like iframes, unity games etc. 
 * bLazy is lightweight, less than 1.2KB and less than 1.05KB if you don't need IE7- support.
 * bLazy is AMD, CommonJS and Browser globals compatible.
 
 ## CHANGELOG
+### v 1.5.0 (2015/10/30) ###
+* Added new feature. Now you can lazy load everything with a src attribute like iframes, unity games etc.
+* Fixed [#45](https://github.com/dinbror/blazy/issues/45). Now you can pass an option if you always want to load invisible images/elements.
+* Fixed [#49](https://github.com/dinbror/blazy/issues/49). Expanded the `load` function so it's now possible to pass a list of elements instead of only one element. Tested with getElementById, getElementsByClassName, querySelectorAll, querySelector and jQuery selector.
+* Fixed [#63](https://github.com/dinbror/blazy/issues/63). 
+
 ### v 1.4.1 (2015/10/12) ###
-* Fixed [#60](https://github.com/dinbror/blazy/issues/60). An "Uncaught TypeError" when options is null introduced in the big refactoring in version 1.4.0.
+* Fixed [#60](https://github.com/dinbror/blazy/issues/60). An "Uncaught TypeError" when options is null introduced in the refactoring in version 1.4.0.
 
 ### v 1.4.0 (2015/09/28) ###
 * Fixed [#56](https://github.com/dinbror/blazy/issues/56). Now it's possible to create multiple versions of blazy without overriding options.

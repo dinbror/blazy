@@ -1,6 +1,5 @@
-
 /*!
-  hey, [be]Lazy.js - v1.4.1 - 2015.10.12
+  hey, [be]Lazy.js - v1.5.0 - 2015.10.30
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -43,7 +42,7 @@
         //options and helper vars
         var scope = this;
         var util = scope._util = {};
-        util.images = [];
+        util.elements = [];
         util.destroyed = true;
         scope.options = options || {};
         scope.options.error = scope.options.error || false;
@@ -54,6 +53,7 @@
         scope.options.container = scope.options.container ? document.querySelectorAll(scope.options.container) : false;
         scope.options.errorClass = scope.options.errorClass || 'b-error';
         scope.options.breakpoints = scope.options.breakpoints || false;
+        scope.options.loadInvisible = scope.options.loadInvisible || false;
         scope.options.successClass = scope.options.successClass || 'b-loaded';
         scope.options.src = source = scope.options.src || 'data-src';
         isRetina = window.devicePixelRatio > 1;
@@ -67,8 +67,15 @@
         scope.revalidate = function() {
             initialize(this);
         };
-        scope.load = function(element, force) {
-            if (!isElementLoaded(element, this.options)) loadImage(element, force, this.options);
+        scope.load = function(elements, force) {
+            var opt = this.options;
+            if (elements.length === undefined) {
+                loadElement(elements, force, opt);
+            } else {
+                each(elements, function(element) {
+                    loadElement(element, force, opt);
+                });
+            }
         };
         scope.destroy = function() {
             var self = this;
@@ -82,7 +89,7 @@
             unbindEvent(window, 'resize', util.validateT);
             unbindEvent(window, 'resize', util.saveViewportOffsetT);
             util.count = 0;
-            util.images.length = 0;
+            util.elements.length = 0;
             util.destroyed = true;
         };
 
@@ -112,9 +119,9 @@
      ************************************/
     function initialize(self) {
         var util = self._util;
-        // First we create an array of images to lazy load
-        util.images = createImageArray(self.options.selector);
-        util.count = util.images.length;
+        // First we create an array of elements to lazy load
+        util.elements = toArray(self.options.selector);
+        util.count = util.elements.length;
         // Then we bind resize and scroll events if not already binded
         if (util.destroyed) {
             util.destroyed = false;
@@ -134,10 +141,10 @@
     function validate(self) {
         var util = self._util;
         for (var i = 0; i < util.count; i++) {
-            var image = util.images[i];
-            if (elementInView(image) || isElementLoaded(image, self.options)) {
-                self.load(image);
-                util.images.splice(i, 1);
+            var element = util.elements[i];
+            if (elementInView(element) || isElementLoaded(element, self.options)) {
+                self.load(element);
+                util.elements.splice(i, 1);
                 util.count--;
                 i--;
             }
@@ -155,30 +162,33 @@
         );
     }
 
-    function loadImage(ele, force, options) {
-        // if element is visible or forced
-        if (force || (ele.offsetWidth > 0 && ele.offsetHeight > 0)) {
-            var dataSrc = ele.getAttribute(source) || ele.getAttribute(options.src); // fallback to default data-src
+    function loadElement(ele, force, options) {
+        // if element is visible, not loaded or forced
+        if (!isElementLoaded(ele, options) && force || options.loadInvisible || (ele.offsetWidth > 0 && ele.offsetHeight > 0)) {
+            var dataSrc = ele.getAttribute(source) || ele.getAttribute(options.src); // fallback to default 'data-src'
             if (dataSrc) {
                 var dataSrcSplitted = dataSrc.split(options.separator);
                 var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
-                var img = new Image();
+                var isImage = ele.nodeName.toLowerCase() === 'img';
                 // cleanup markup, remove data source attributes
                 each(options.breakpoints, function(object) {
                     ele.removeAttribute(object.src);
                 });
                 ele.removeAttribute(options.src);
-                img.onerror = function() {
-                    if (options.error) options.error(ele, "invalid");
-                    ele.className = ele.className + ' ' + options.errorClass;
-                };
-                img.onload = function() {
-                    // Is element an image or should we add the src as a background image?
-                    ele.nodeName.toLowerCase() === 'img' ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';
-                    ele.className = ele.className + ' ' + options.successClass;
-                    if (options.success) options.success(ele);
-                };
-                img.src = src; //preload image
+                if (isImage || ele.src === undefined) {
+                    var img = new Image();
+                    img.onerror = function() {
+                        if (options.error) options.error(ele, "invalid");
+                        ele.className = ele.className + ' ' + options.errorClass;
+                    };
+                    img.onload = function() {
+                        // Is element an image or should we add the src as a background image?
+                        isImage ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';
+                        ele.className = ele.className + ' ' + options.successClass;
+                        if (options.success) options.success(ele);
+                    };
+                }
+                (img || ele).src = src;
             } else {
                 if (options.error) options.error(ele, "missing");
                 ele.className = ele.className + ' ' + options.errorClass;
@@ -190,7 +200,7 @@
         return (' ' + ele.className + ' ').indexOf(' ' + options.successClass + ' ') !== -1;
     }
 
-    function createImageArray(selector) {
+    function toArray(selector) {
         return [].slice.call(document.querySelectorAll(selector));
     }
 
