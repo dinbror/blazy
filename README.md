@@ -44,6 +44,10 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy is AMD, CommonJS and Browser globals compatible.
 
 ## CHANGELOG
+### v 1.5.1 (2015/11/14) ###
+* Fixed toArray function so it now works in IE7 + 8 again. Bug introduced in 1.4.0. Thanks for reporting [@imcotton](https://github.com/imcotton).
+* Fixed [#41](https://github.com/dinbror/blazy/pull/41). Added options for validate and saveViewportOffset delay.
+
 ### v 1.5.0 (2015/10/30) ###
 * Added new feature. Now you can lazy load everything with a src attribute like iframes, unity games etc.
 * Fixed [#45](https://github.com/dinbror/blazy/issues/45). Now you can pass an option if you always want to load invisible images/elements.

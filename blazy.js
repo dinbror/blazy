@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.5.0 - 2015.10.30
+  hey, [be]Lazy.js - v1.5.1 - 2015.11.14
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -55,6 +55,8 @@
         scope.options.breakpoints = scope.options.breakpoints || false;
         scope.options.loadInvisible = scope.options.loadInvisible || false;
         scope.options.successClass = scope.options.successClass || 'b-loaded';
+		scope.options.validateDelay = scope.options.validateDelay || 25;
+		scope.options.saveViewportOffsetDelay = scope.options.saveViewportOffsetDelay || 50;
         scope.options.src = source = scope.options.src || 'data-src';
         isRetina = window.devicePixelRatio > 1;
         viewport = {};
@@ -96,10 +98,10 @@
         //throttle, ensures that we don't call the functions too often
         util.validateT = throttle(function() {
             validate(scope);
-        }, 25, scope);
+        }, scope.options.validateDelay, scope);
         util.saveViewportOffsetT = throttle(function() {
             saveViewportOffset(scope.options.offset);
-        }, 50, scope);
+        }, scope.options.saveViewportOffsetDelay, scope);
         saveViewportOffset(scope.options.offset);
 
         //handle multi-served image src
@@ -201,7 +203,10 @@
     }
 
     function toArray(selector) {
-        return [].slice.call(document.querySelectorAll(selector));
+		var array = [];
+ 		var nodelist = document.querySelectorAll(selector);
+ 		for(var i = nodelist.length; i--; array.unshift(nodelist[i])){}
+		return array;
     }
 
     function saveViewportOffset(offset) {
