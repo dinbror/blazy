@@ -44,6 +44,10 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy is AMD, CommonJS and Browser globals compatible.
 
 ## CHANGELOG
+### v 1.5.2 (2015/12/01) ###
+* Fixed minor bug where the error class was added when calling `revalidate()`.
+* Minor refactoring
+
 ### v 1.5.1 (2015/11/14) ###
 * Fixed toArray function so it now works in IE7 + 8 again. Bug introduced in 1.4.0. Thanks for reporting [@imcotton](https://github.com/imcotton).
 * Fixed [#41](https://github.com/dinbror/blazy/pull/41). Added options for validate and saveViewportOffset delay.

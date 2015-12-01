@@ -1,7 +1,7 @@
 {
 	"name": "bLazy",
 	"main": "blazy.js",
-	"version": "1.5.1",
+	"version": "1.5.2",
 	"description": "bLazy is a lightweight script for lazy loading and multi-serving images",
 	"homepage": "https://github.com/dinbror/blazy",
 	"keywords": [

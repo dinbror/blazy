@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.5.1 - 2015.11.14
+  hey, [be]Lazy.js - v1.5.2 - 2015.12.01
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -144,7 +144,7 @@
         var util = self._util;
         for (var i = 0; i < util.count; i++) {
             var element = util.elements[i];
-            if (elementInView(element) || isElementLoaded(element, self.options)) {
+            if (elementInView(element) || hasClass(element, self.options.successClass)) {
                 self.load(element);
                 util.elements.splice(i, 1);
                 util.count--;
@@ -166,7 +166,7 @@
 
     function loadElement(ele, force, options) {
         // if element is visible, not loaded or forced
-        if (!isElementLoaded(ele, options) && force || options.loadInvisible || (ele.offsetWidth > 0 && ele.offsetHeight > 0)) {
+        if (!hasClass(ele, options.successClass) && (force || options.loadInvisible || (ele.offsetWidth > 0 && ele.offsetHeight > 0))) {
             var dataSrc = ele.getAttribute(source) || ele.getAttribute(options.src); // fallback to default 'data-src'
             if (dataSrc) {
                 var dataSrcSplitted = dataSrc.split(options.separator);
@@ -181,26 +181,33 @@
                     var img = new Image();
                     img.onerror = function() {
                         if (options.error) options.error(ele, "invalid");
-                        ele.className = ele.className + ' ' + options.errorClass;
+                        addClass(ele, options.errorClass);
                     };
                     img.onload = function() {
                         // Is element an image or should we add the src as a background image?
                         isImage ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';
-                        ele.className = ele.className + ' ' + options.successClass;
+                        addClass(ele, options.successClass);
                         if (options.success) options.success(ele);
                     };
-                }
-                (img || ele).src = src;
+					img.src = src; //preload
+                } else {
+					ele.src = src;
+					addClass(ele, options.successClass);
+				}
             } else {
                 if (options.error) options.error(ele, "missing");
-                ele.className = ele.className + ' ' + options.errorClass;
+                if (!hasClass(ele, options.errorClass)) addClass(ele, options.errorClass);
             }
         }
     }
 
-    function isElementLoaded(ele, options) {
-        return (' ' + ele.className + ' ').indexOf(' ' + options.successClass + ' ') !== -1;
+    function hasClass(ele, className) {
+        return (' ' + ele.className + ' ').indexOf(' ' + className + ' ') !== -1;
     }
+	
+	function addClass(ele, className){
+		ele.className = ele.className + ' ' + className;
+	}
 
     function toArray(selector) {
 		var array = [];
