@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>blazy.js - lazyload examples</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>	  html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}table{border-collapse:collapse;border-spacing:0}
+	  body {
+		  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	  }
+	  h1 {
+		  font-size: 75px;
+		  font-weight: bold;
+	  }
+	  h2 {
+		  font-size:40px;
+		  padding: 20px 0 10px;
+	  }
+	  p{
+		  padding:10px 0;
+	  }
+	  li{
+		  padding: 3px 0;
+	  }
+	  .ratio{
+		  padding-bottom:66.64%;
+		  background-color: #1E1E1E;
+		  height: 0;
+		  width: 100%;
+		  overflow: hidden;
+		  position: relative;
+	  }
+	  .example {
+		  overflow:hidden;
+		  position:relative;
+	  }
+	  .example iframe {
+		  position:absolute;
+		  height:100%;
+		  width:100%;
+	  }
+	  .header {
+	      background: #ececec;
+		  padding: 50px; 
+		  color: black;
+	  }
+	  .branding{
+	      max-width: 900px;
+	      margin: 0 auto;
+	  }
+	  .branding pre{
+		  background: #f7f7f7;
+		  color: black;
+		  border-radius: 0;
+	  }
+	  .github {
+	      background: url('http://dinbror.dk/blazy/assets/github.png') 0 0 no-repeat;
+	      height: 149px;
+	      width: 149px;
+	      position: absolute;
+	      top: 0;
+	      right: 0;
+	  }
+	  .section {
+		  margin: 0 auto;
+		  max-width:900px;
+	  }
+	  .container {
+		  background-color: #1E1E1E;
+		  overflow-x: scroll;
+		  overflow-y: hidden;
+		  height:0;
+		  padding-bottom:66%;
+	  }
+	  .list{
+		  font-size:0;
+		  width:300%;
+	  }
+	  .list .wrapper {
+		  display: inline-block;
+		  width:33.3%;
+	  }
+	  img {
+		  max-width: 100%;
+	  }
+	  pre {
+		  background: #212121;
+		  color: white;
+		  padding: 15px 10px 5px;
+		  margin: 0 0 20px;
+		  font-family:Menlo,monospace;
+		  font-size: 14px;
+		  overflow-x: auto;
+	  }
+	  .b-lazy{
+		  display:inline-block;
+		  position:absolute;
+		  left:0;
+		  top:0;
+		  height:100%;
+		  width:100%;
+	  }
+	  .list .b-lazy{
+		  max-height:100%;
+		  height:auto;
+	  }
+	  .b-lazy.animate{
+		  opacity:0;
+		  -ms-transform: scale(3);
+		  -moz-transform: scale(3);
+		  -webkit-transform: scale(3);
+		  transform: scale(3);
+		  -ms-transition: all 500ms;
+		  -moz-transition: all 500ms;
+		  -webkit-transition: all 500ms;
+		  transition: all 500ms;
+	  }
+	  .b-loaded.animate {
+		  opacity:1;
+		  -ms-transform: scale(1);
+		  -moz-transform: scale(1);
+		  -webkit-transform: scale(1);
+		  transform: scale(1);
+	  }
+	  
+	  @media (max-width: 600px) {
+	    h1 {
+	    	font-size: 40px;
+	    }
+		h2 {
+			font-size: 25px;
+		}
+	  }
+  </style>
+</head>
+<body>
+	<div class="header">
+		<div class="branding">
+			<h1>blazy.js</h1>
+			<p>Blazy is a fast, SEO friendly and small but still feature-rich lazy load script. It was originally build for lazy loading images but it can also lazy load any element with a source attribute like iframes, unity games, html5 videos, scripts etc.</p>
+			<p>Blazy comes with a bunch of features like serving retina images for retina screens, multi-serve images depending on screensize and error handling. <a href="http://dinbror.dk/blog/blazy/?ref=example-page">For a list of all features and more details you can visit the blog post</a>. Blazy works in all modern browsers including IE7+.</p> 
+			<h2>How to lazyload</h2>
+			<ol>
+				<li>Add blazy.js to your website</li>
+				<li>Add the 'b-lazy' class to the elements that should be lazy loaded</li>
+				<li>Initialize blazy whenever you're ready <br><br>
+				<pre>
+    var bLazy = new Blazy({
+        // Options
+    });
+				</pre>
+				</li>
+			</ol>
+			<h2>Examples</h2>
+			<ol>
+				<li>Lazy load images</li>
+				<li>Lazy load background image</li>
+				<li>Horizontal lazy load</li>
+				<li>Lazy load iframe</li>
+				<li>Lazy load HTML5 video</li>
+				<li>Lazy load script file</li>
+			</ol>
+		</div>
+		<a class="github" href="https://github.com/dinbror/blazy/"></a>
+	</div>
+	<div class="section">
+		<div class="example">
+			<h2>1a: Default lazyload image example</h2>
+			<div class="wrapper ratio">
+			    <img class="b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/01.jpg" alt="Lazy load images example 1a" />
+			</div>
+			<pre>
+    &lt;img class="b-lazy" data-src=&quot;image.jpg&quot; /&gt;
+			</pre>
+		</div>
+		<div class="example">
+			<h2>1b: Lazy load image example with css effect</h2>
+			<div class="wrapper ratio">
+			    <img class="b-lazy animate" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/02.jpg" alt="Lazy load images example 1b" />
+			</div>
+			<pre>
+  CSS:
+  
+    .b-lazy {
+       opacity:0;
+       transform: scale(3);
+       transition: all 500ms;
+    }
+    .b-loaded {
+       opacity:1;
+       transform: scale(1);
+    }
+			</pre>
+		</div>
+		<div class="example">
+			<h2>1c: Lazy load image example with low res image placeholder</h2>
+			<div class="wrapper ratio">
+			    <img class="b-lazy" src="http://cdn.dinbror.dk/assets/blazy/03-low.jpg" data-src="http://cdn.dinbror.dk/assets/blazy/03.jpg" alt="Lazy load images example 1c" />
+			</div>
+			<pre>
+    &lt;img class="b-lazy" src=&quot;low-res-image.jpg&quot; data-src=&quot;image.jpg&quot; /&gt;
+			</pre>
+		</div>
+		<div class="example">
+			<h2>2: Lazy load background image example</h2>
+			<div class="wrapper ratio">
+			    <div class="b-lazy" data-src="http://cdn.dinbror.dk/assets/blazy/05.jpg"></div>
+			</div>
+			<pre>
+    &lt;div class="b-lazy" data-src=&quot;image.jpg&quot;&gt;&lt;/div&gt;
+			</pre>
+		</div>
+		<div class="example">
+			<h2>3: Horizontal lazyload inside container example</h2>
+			<div class="container">
+				<ul class="list">
+					<li class="wrapper ratio">
+					    <img class="b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/04.jpg" alt="Lazy load images example 3 image 1" />
+					</li>
+					<li class="wrapper ratio">
+					    <img class="b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/05.jpg" alt="Lazy load images example 3 image 2" />
+					</li>
+					<li class="wrapper ratio">
+					    <img class="b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/06.jpg" alt="Lazy load images example 3 image 3" />
+					</li>
+				</ul>
+			</div>
+			<pre>
+    var blazy = new Blazy({
+	container: '.container'
+    });
+			</pre>
+		</div>
+		<div class="example">
+			<h2>4: Lazy load iframe example</h2>
+			<div class="wrapper ratio">
+				<iframe class="b-lazy" data-src="https://www.youtube.com/embed/uKtjVQ5IJOQ" frameborder="0" allowfullscreen></iframe>
+			</div>
+			<pre>
+    &lt;iframe class=&quot;b-lazy&quot; 
+	    data-src=&quot;https://www.youtube.com/embed/uKtjVQ5IJOQ&quot; 
+	    frameborder=&quot;0&quot; 
+	    allowfullscreen>
+    &lt;/iframe&gt;
+			</pre>
+		</div>
+		<div class="example">
+			<h2>5: Lazy load HTML5 video example</h2>
+			<div class="wrapper ratio">
+			    <video class="b-lazy" data-src="http://cdn.dinbror.dk/assets/blazy/SampleVideo_1280x720_1mb.mp4" controls></video>
+			</div>
+			<pre>
+    &lt;video class="b-lazy" data-src=&quot;video.mp4&quot; controls&gt;&lt;/video&gt;
+			</pre>
+		</div>
+		<div class="example">
+			<h2>6: Lazy load script example</h2>
+			<script class="b-lazy" data-src="script.js" async></script>
+			<p>Check the console log</p>
+			<pre>
+    &lt;script class="b-lazy" data-src=&quot;script.js&quot; async&gt;&lt;/script&gt;
+			</pre>
+		</div>
+	</div>
+	<script src="../blazy.js"></script>
+	<script>
+    window.bLazy = new Blazy({
+		container: '.container',
+		success: function(element){
+			console.log("Element loaded: ", element.dataset.src);
+		}
+	});
+	</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.5.2 - 2015.12.01
+  hey, [be]Lazy.js - v1.5.3 - 2015.12.01
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -172,11 +172,7 @@
                 var dataSrcSplitted = dataSrc.split(options.separator);
                 var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
                 var isImage = ele.nodeName.toLowerCase() === 'img';
-                // cleanup markup, remove data source attributes
-                each(options.breakpoints, function(object) {
-                    ele.removeAttribute(object.src);
-                });
-                ele.removeAttribute(options.src);
+				// Image or background image
                 if (isImage || ele.src === undefined) {
                     var img = new Image();
                     img.onerror = function() {
@@ -186,13 +182,13 @@
                     img.onload = function() {
                         // Is element an image or should we add the src as a background image?
                         isImage ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';
-                        addClass(ele, options.successClass);
-                        if (options.success) options.success(ele);
+                        itemLoaded(ele, options);
                     };
 					img.src = src; //preload
+				// An item with src like iframe, unity, video etc
                 } else {
 					ele.src = src;
-					addClass(ele, options.successClass);
+					itemLoaded(ele, options);
 				}
             } else {
                 if (options.error) options.error(ele, "missing");
@@ -200,6 +196,16 @@
             }
         }
     }
+
+	function itemLoaded(ele, options){
+        addClass(ele, options.successClass);
+        if (options.success) options.success(ele);
+        // cleanup markup, remove data source attributes
+        each(options.breakpoints, function(object) {
+            ele.removeAttribute(object.src);
+        });
+        ele.removeAttribute(options.src);
+	}
 
     function hasClass(ele, className) {
         return (' ' + ele.className + ' ').indexOf(' ' + className + ' ') !== -1;

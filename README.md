@@ -10,13 +10,16 @@ bLazy is a lightweight script for lazy loading and multi-serving images (less th
 5. [License](https://github.com/dinbror/blazy#license)<br>
 
 ## DEMO ##
-http://dinbror.dk/blazy
+http://dinbror.dk/blazy/?ref=github
 
-More examples will come. In the meantime you can play with a basic example at codepen:
+More examples:
+http://dinbror.dk/blazy/examples/?ref=github
+
+Codepen playground:
 http://codepen.io/dinbror/pen/HzCAJ
 
 ## USAGE & API ##
-http://dinbror.dk/blog/blazy
+http://dinbror.dk/blog/blazy/?ref=github
 
 ### INSTALL
 You can install blazy.js with npm:
@@ -39,11 +42,16 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy can lazy load all types of images including background images.
 * bLazy can lazy load images depending on screensize (multi-serve images).
 * bLazy can serve retina images on retina devices.
-* bLazy can lazy load everything with a src like iframes, unity games etc. 
+* bLazy can lazy load everything with a src like iframes, HTML5 videos, scripts, unity games etc. 
 * bLazy is lightweight, less than 1.2KB and less than 1.05KB if you don't need IE7- support.
-* bLazy is AMD, CommonJS and Browser globals compatible.
+* bLazy supports all main module formats like AMD, CommonJS and globals.  
 
 ## CHANGELOG
+### v 1.5.3 (2016/03/01) ###
+* Implemented [#30](https://github.com/dinbror/blazy/pull/30). Keeping data source until success.
+* Fixed [#47](https://github.com/dinbror/blazy/pull/47). After implementing #30 you can now get the image src and more information in the error/success callbacks.
+* Added example page to repo `/example/index.html`.
+
 ### v 1.5.2 (2015/12/01) ###
 * Fixed minor bug where the error class was added when calling `revalidate()`.
 * Minor refactoring
