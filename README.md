@@ -10,16 +10,16 @@ bLazy is a lightweight script for lazy loading and multi-serving images (less th
 5. [License](https://github.com/dinbror/blazy#license)<br>
 
 ## DEMO ##
-http://dinbror.dk/blazy/?ref=github
+[http://dinbror.dk/blazy/](http://dinbror.dk/blazy/?ref=github)
 
 More examples:
-http://dinbror.dk/blazy/examples/?ref=github
+[http://dinbror.dk/blazy/examples/](http://dinbror.dk/blazy/examples/?ref=github)
 
 Codepen playground:
 http://codepen.io/dinbror/pen/HzCAJ
 
 ## USAGE & API ##
-http://dinbror.dk/blog/blazy/?ref=github
+[http://dinbror.dk/blog/blazy/](http://dinbror.dk/blog/blazy/?ref=github)
 
 ### INSTALL
 You can install blazy.js with npm:
