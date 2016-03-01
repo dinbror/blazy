@@ -9,7 +9,7 @@
     "blazy.js",
     "lazy",
     "lazyload",
-	"lazyloading",
+    "lazyloading",
     "image",
     "images",
     "retina",
@@ -28,5 +28,8 @@
   "homepage": "https://github.com/dinbror/blazy",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "directories": {
+    "example": "example"
   }
 }

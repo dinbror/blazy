@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.5.3 - 2015.12.01
+  hey, [be]Lazy.js - v1.5.3 - 2016.03.01
   A lazy loading and multi-serving image script
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
