@@ -132,5 +132,5 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * Added throttle function to ensure that we don't call resize/scroll functions too often.
 * Cleaning image markup when image has loaded.
 
-##LICENSE:##
-Copyright (c) 2013-15 Bjørn Klinggaard. Licensed under the [The MIT License (MIT)](http://opensource.org/licenses/MIT).
+##LICENSE: 
+Copyright (c) 2013-16 Bjørn Klinggaard. Licensed under the [The MIT License (MIT)](http://opensource.org/licenses/MIT).
