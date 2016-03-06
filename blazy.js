@@ -1,6 +1,6 @@
 /*!
-  hey, [be]Lazy.js - v1.5.3 - 2016.03.01
-  A lazy loading and multi-serving image script
+  hey, [be]Lazy.js - v1.5.4 - 2016.03.06
+  A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
 ;
@@ -55,8 +55,8 @@
         scope.options.breakpoints = scope.options.breakpoints || false;
         scope.options.loadInvisible = scope.options.loadInvisible || false;
         scope.options.successClass = scope.options.successClass || 'b-loaded';
-		scope.options.validateDelay = scope.options.validateDelay || 25;
-		scope.options.saveViewportOffsetDelay = scope.options.saveViewportOffsetDelay || 50;
+        scope.options.validateDelay = scope.options.validateDelay || 25;
+        scope.options.saveViewportOffsetDelay = scope.options.saveViewportOffsetDelay || 50;
         scope.options.src = source = scope.options.src || 'data-src';
         isRetina = window.devicePixelRatio > 1;
         viewport = {};
@@ -120,24 +120,26 @@
     /* Private helper functions
      ************************************/
     function initialize(self) {
-        var util = self._util;
-        // First we create an array of elements to lazy load
-        util.elements = toArray(self.options.selector);
-        util.count = util.elements.length;
-        // Then we bind resize and scroll events if not already binded
-        if (util.destroyed) {
-            util.destroyed = false;
-            if (self.options.container) {
-                each(self.options.container, function(object) {
-                    bindEvent(object, 'scroll', util.validateT);
-                });
+        setTimeout(function() {
+            var util = self._util;
+            // First we create an array of elements to lazy load
+            util.elements = toArray(self.options.selector);
+            util.count = util.elements.length;
+            // Then we bind resize and scroll events if not already binded
+            if (util.destroyed) {
+                util.destroyed = false;
+                if (self.options.container) {
+                    each(self.options.container, function(object) {
+                        bindEvent(object, 'scroll', util.validateT);
+                    });
+                }
+                bindEvent(window, 'resize', util.saveViewportOffsetT);
+                bindEvent(window, 'resize', util.validateT);
+                bindEvent(window, 'scroll', util.validateT);
             }
-            bindEvent(window, 'resize', util.saveViewportOffsetT);
-            bindEvent(window, 'resize', util.validateT);
-            bindEvent(window, 'scroll', util.validateT);
-        }
-        // And finally, we start to lazy load. Should bLazy ensure domready?
-        validate(self);
+            // And finally, we start to lazy load.
+            validate(self);
+        }, 1); // "dom ready" fix
     }
 
     function validate(self) {
@@ -172,7 +174,7 @@
                 var dataSrcSplitted = dataSrc.split(options.separator);
                 var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
                 var isImage = ele.nodeName.toLowerCase() === 'img';
-				// Image or background image
+                // Image or background image
                 if (isImage || ele.src === undefined) {
                     var img = new Image();
                     img.onerror = function() {
@@ -184,12 +186,12 @@
                         isImage ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';
                         itemLoaded(ele, options);
                     };
-					img.src = src; //preload
-				// An item with src like iframe, unity, video etc
+                    img.src = src; //preload
+                    // An item with src like iframe, unity, video etc
                 } else {
-					ele.src = src;
-					itemLoaded(ele, options);
-				}
+                    ele.src = src;
+                    itemLoaded(ele, options);
+                }
             } else {
                 if (options.error) options.error(ele, "missing");
                 if (!hasClass(ele, options.errorClass)) addClass(ele, options.errorClass);
@@ -197,7 +199,7 @@
         }
     }
 
-	function itemLoaded(ele, options){
+    function itemLoaded(ele, options) {
         addClass(ele, options.successClass);
         if (options.success) options.success(ele);
         // cleanup markup, remove data source attributes
@@ -205,21 +207,21 @@
             ele.removeAttribute(object.src);
         });
         ele.removeAttribute(options.src);
-	}
+    }
 
     function hasClass(ele, className) {
         return (' ' + ele.className + ' ').indexOf(' ' + className + ' ') !== -1;
     }
-	
-	function addClass(ele, className){
-		ele.className = ele.className + ' ' + className;
-	}
+
+    function addClass(ele, className) {
+        ele.className = ele.className + ' ' + className;
+    }
 
     function toArray(selector) {
-		var array = [];
- 		var nodelist = document.querySelectorAll(selector);
- 		for(var i = nodelist.length; i--; array.unshift(nodelist[i])){}
-		return array;
+        var array = [];
+        var nodelist = document.querySelectorAll(selector);
+        for (var i = nodelist.length; i--; array.unshift(nodelist[i])) {}
+        return array;
     }
 
     function saveViewportOffset(offset) {

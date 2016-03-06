@@ -1,6 +1,6 @@
 hey, be lazy
 =====
-bLazy is a lightweight script for lazy loading and multi-serving images (less than 1.2KB minified and gzipped). It’s written in pure JavaScript why it doesn’t depend on 3rd-party libraries such as jQuery. It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data usage if he/she doesn't browse the whole page.
+bLazy is a lightweight script for lazy loading and multi-serving images, iframes, videos and more (less than 1.4KB minified and gzipped). It’s written in pure JavaScript why it doesn’t depend on 3rd-party libraries such as jQuery. It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data usage if he/she doesn't browse the whole page.
 
 **Table of Contents**<br>
 1. [Demo](https://github.com/dinbror/blazy#demo)<br>
@@ -47,6 +47,9 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy supports all main module formats like AMD, CommonJS and globals.  
 
 ## CHANGELOG
+### v 1.5.4 (2016/03/06) ###
+* Fixed two Safari bugs: [#66](https://github.com/dinbror/blazy/issues/66) and [#78](https://github.com/dinbror/blazy/issues/78). Ensuring "DOM ready".
+
 ### v 1.5.3 (2016/03/01) ###
 * Implemented [#30](https://github.com/dinbror/blazy/pull/30). Keeping data source until success.
 * Fixed [#47](https://github.com/dinbror/blazy/pull/47). After implementing #30 you can now get the image src and more information in the error/success callbacks.
