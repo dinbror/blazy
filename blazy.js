@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.5.4 - 2016.03.06
+  hey, [be]Lazy.js - v1.6.0 - 2016.04.30
   A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -21,7 +21,8 @@
     'use strict';
 
     //private vars
-    var source, viewport, isRetina;
+    var source, viewport, isRetina, attrSrc = 'src',
+        attrSrcset = 'srcset';
 
     // constructor
     return function Blazy(options) {
@@ -52,11 +53,12 @@
         scope.options.separator = scope.options.separator || '|';
         scope.options.container = scope.options.container ? document.querySelectorAll(scope.options.container) : false;
         scope.options.errorClass = scope.options.errorClass || 'b-error';
-        scope.options.breakpoints = scope.options.breakpoints || false;
+        scope.options.breakpoints = scope.options.breakpoints || false; // obsolete
         scope.options.loadInvisible = scope.options.loadInvisible || false;
         scope.options.successClass = scope.options.successClass || 'b-loaded';
         scope.options.validateDelay = scope.options.validateDelay || 25;
         scope.options.saveViewportOffsetDelay = scope.options.saveViewportOffsetDelay || 50;
+        scope.options.srcset = scope.options.srcset || 'data-srcset';
         scope.options.src = source = scope.options.src || 'data-src';
         isRetina = window.devicePixelRatio > 1;
         viewport = {};
@@ -104,7 +106,7 @@
         }, scope.options.saveViewportOffsetDelay, scope);
         saveViewportOffset(scope.options.offset);
 
-        //handle multi-served image src
+        //handle multi-served image src (obsolete)
         each(scope.options.breakpoints, function(object) {
             if (object.width >= window.screen.width) {
                 source = object.src;
@@ -113,33 +115,34 @@
         });
 
         // start lazy load
-        initialize(scope);
+        setTimeout(function() {
+            initialize(scope);
+        }); // "dom ready" fix
+
     };
 
 
     /* Private helper functions
      ************************************/
     function initialize(self) {
-        setTimeout(function() {
-            var util = self._util;
-            // First we create an array of elements to lazy load
-            util.elements = toArray(self.options.selector);
-            util.count = util.elements.length;
-            // Then we bind resize and scroll events if not already binded
-            if (util.destroyed) {
-                util.destroyed = false;
-                if (self.options.container) {
-                    each(self.options.container, function(object) {
-                        bindEvent(object, 'scroll', util.validateT);
-                    });
-                }
-                bindEvent(window, 'resize', util.saveViewportOffsetT);
-                bindEvent(window, 'resize', util.validateT);
-                bindEvent(window, 'scroll', util.validateT);
+        var util = self._util;
+        // First we create an array of elements to lazy load
+        util.elements = toArray(self.options.selector);
+        util.count = util.elements.length;
+        // Then we bind resize and scroll events if not already binded
+        if (util.destroyed) {
+            util.destroyed = false;
+            if (self.options.container) {
+                each(self.options.container, function(object) {
+                    bindEvent(object, 'scroll', util.validateT);
+                });
             }
-            // And finally, we start to lazy load.
-            validate(self);
-        }, 1); // "dom ready" fix
+            bindEvent(window, 'resize', util.saveViewportOffsetT);
+            bindEvent(window, 'resize', util.validateT);
+            bindEvent(window, 'scroll', util.validateT);
+        }
+        // And finally, we start to lazy load.
+        validate(self);
     }
 
     function validate(self) {
@@ -173,7 +176,7 @@
             if (dataSrc) {
                 var dataSrcSplitted = dataSrc.split(options.separator);
                 var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
-                var isImage = ele.nodeName.toLowerCase() === 'img';
+                var isImage = equal(ele, 'img');
                 // Image or background image
                 if (isImage || ele.src === undefined) {
                     var img = new Image();
@@ -182,19 +185,40 @@
                         addClass(ele, options.errorClass);
                     };
                     img.onload = function() {
-                        // Is element an image or should we add the src as a background image?
-                        isImage ? ele.src = src : ele.style.backgroundImage = 'url("' + src + '")';
+                        // Is element an image
+                        if (isImage) {
+                            handleSource(ele, attrSrc, options.src); //src
+                            handleSource(ele, attrSrcset, options.srcset); //srcset
+                            //picture element
+                            var parent = ele.parentNode;
+                            if (parent && equal(parent, 'picture')) {
+                                each(parent.getElementsByTagName('source'), function(source) {
+                                    handleSource(source, attrSrcset, options.srcset);
+                                });
+                            }
+                            // or background-image
+                        } else {
+                            ele.style.backgroundImage = 'url("' + src + '")';
+                        }
                         itemLoaded(ele, options);
                     };
                     img.src = src; //preload
-                    // An item with src like iframe, unity, video etc
-                } else {
-                    ele.src = src;
+                } else { // An item with src like iframe, unity, simpelvideo etc
+                    handleSource(ele, attrSrc, options.src);
                     itemLoaded(ele, options);
                 }
             } else {
-                if (options.error) options.error(ele, "missing");
-                if (!hasClass(ele, options.errorClass)) addClass(ele, options.errorClass);
+                // video with child source
+                if (equal(ele, 'video')) {
+                    each(ele.getElementsByTagName('source'), function(source) {
+                        handleSource(source, attrSrc, options.src);
+                    });
+                    ele.load();
+                    itemLoaded(ele, options);
+                } else {
+                    if (options.error) options.error(ele, "missing");
+                    addClass(ele, options.errorClass);
+                }
             }
         }
     }
@@ -206,7 +230,18 @@
         each(options.breakpoints, function(object) {
             ele.removeAttribute(object.src);
         });
-        ele.removeAttribute(options.src);
+    }
+
+    function handleSource(ele, attr, dataAttr) {
+        var dataSrc = ele.getAttribute(dataAttr);
+        if (dataSrc) {
+            ele[attr] = dataSrc;
+            ele.removeAttribute(dataAttr);
+        }
+    }
+
+    function equal(ele, str) {
+        return ele.nodeName.toLowerCase() === str;
     }
 
     function hasClass(ele, className) {
@@ -214,7 +249,9 @@
     }
 
     function addClass(ele, className) {
-        ele.className = ele.className + ' ' + className;
+        if (!hasClass(ele, className)) {
+            ele.className += ' ' + className;
+        }
     }
 
     function toArray(selector) {

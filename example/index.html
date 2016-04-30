@@ -93,7 +93,7 @@
 		  font-size: 14px;
 		  overflow-x: auto;
 	  }
-	  .b-lazy{
+	  .b-lazy, video{
 		  display:inline-block;
 		  position:absolute;
 		  left:0;
@@ -166,7 +166,7 @@
 	</div>
 	<div class="section">
 		<div class="example">
-			<h2>1a: Default lazyload image example</h2>
+			<h2>1.1: Default lazyload image example</h2>
 			<div class="wrapper ratio">
 			    <img class="b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/01.jpg" alt="Lazy load images example 1a" />
 			</div>
@@ -175,7 +175,7 @@
 			</pre>
 		</div>
 		<div class="example">
-			<h2>1b: Lazy load image example with css effect</h2>
+			<h2>1.2: Lazy load image example with css effect</h2>
 			<div class="wrapper ratio">
 			    <img class="b-lazy animate" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/02.jpg" alt="Lazy load images example 1b" />
 			</div>
@@ -194,7 +194,7 @@
 			</pre>
 		</div>
 		<div class="example">
-			<h2>1c: Lazy load image example with low res image placeholder</h2>
+			<h2>1.3: Lazy load image example with low res image placeholder</h2>
 			<div class="wrapper ratio">
 			    <img class="b-lazy" src="http://cdn.dinbror.dk/assets/blazy/03-low.jpg" data-src="http://cdn.dinbror.dk/assets/blazy/03.jpg" alt="Lazy load images example 1c" />
 			</div>
@@ -202,6 +202,55 @@
     &lt;img class="b-lazy" src=&quot;low-res-image.jpg&quot; data-src=&quot;image.jpg&quot; /&gt;
 			</pre>
 		</div>
+		<div class="example">
+			<h2>1.4: Lazy load image example with srcset</h2>
+			<div class="wrapper ratio">
+				<img
+					alt="Lazy load image example with srcset"
+					sizes="100vw"
+					data-srcset="http://placehold.it/1024x682?text=large 1024w,
+						http://placehold.it/600x400?text=medium 640w,
+						http://placehold.it/320x214?text=small 320w"
+					data-src="http://placehold.it/600x400?text=fallback"
+					class="b-lazy" />
+			</div>
+			<pre>
+   &lt;img class="b-lazy" 
+        sizes=&quot;100vw&quot;
+        data-srcset=&quot;large.jpg 1024w, medium.jpg 640w, small.jpg 320w&quot;
+        data-src=&quot;medium.jpg&quot; /&gt;
+			</pre>
+		</div>
+		<div class="example">
+			<h2>1.5: Lazy load image example with picture element</h2>
+			<div class="wrapper ratio">
+				<picture>
+				  <source 
+				    media="(min-width: 650px)"
+				    data-srcset="http://placehold.it/600x400?text=Min-650">
+				  <source 
+				    media="(min-width: 465px)"
+				    data-srcset="http://placehold.it/600x400?text=Min-465">
+				  <img 
+				  	class="b-lazy"
+				    data-src="http://placehold.it/600x400?text=default" 
+				    alt="Lazy load image example with picture element">
+				</picture>
+			</div>
+			<pre>
+    &lt;picture&gt; 
+        &lt;source 
+             media=&quot;(min-width: 650px)&quot;
+             data-srcset=&quot;image-650.jpg&quot;&gt; 
+        &lt;source 
+             media=&quot;(min-width: 465px)&quot; 
+             data-srcset=&quot;image-465.jpg&quot;&gt;
+        &lt;img class=&quot;b-lazy&quot;
+             data-src=&quot;default.jpg&quot;&gt;
+    &lt;/picture&gt;
+			</pre>
+		</div>
+
 		<div class="example">
 			<h2>2: Lazy load background image example</h2>
 			<div class="wrapper ratio">
@@ -246,12 +295,29 @@
 			</pre>
 		</div>
 		<div class="example">
-			<h2>5: Lazy load HTML5 video example</h2>
+			<h2>5.1: Lazy load HTML5 video example</h2>
 			<div class="wrapper ratio">
 			    <video class="b-lazy" data-src="http://cdn.dinbror.dk/assets/blazy/SampleVideo_1280x720_1mb.mp4" controls></video>
 			</div>
 			<pre>
     &lt;video class="b-lazy" data-src=&quot;video.mp4&quot; controls&gt;&lt;/video&gt;
+			</pre>
+		</div>
+		<div class="example">
+			<h2>5.2: Lazy load HTML5 video advanced example</h2>
+			<div class="wrapper ratio">
+				<video class="b-lazy" controls>
+			  		<source data-src="http://cdn.dinbror.dk/assets/blazy/big_buck_bunny.mp4" type="video/mp4">
+			  		<source data-src="http://cdn.dinbror.dk/assets/blazy/big_buck_bunny.webm" type="video/webm">
+			  		Your browser doesn't support HTML5 video tag.
+				</video>    
+			</div>
+			<pre>
+    &lt;video class="b-lazy" controls&gt;
+        &lt;source data-src=&quot;video.mp4&quot; type=&quot;video/mp4&quot;&gt;
+        &lt;source data-src=&quot;video.webm&quot; type=&quot;video/webm&quot;&gt;
+        Your browser doesn&#39;t support HTML5 video tag.
+    &lt;/video&gt;
 			</pre>
 		</div>
 		<div class="example">
@@ -268,7 +334,7 @@
     window.bLazy = new Blazy({
 		container: '.container',
 		success: function(element){
-			console.log("Element loaded: ", element.dataset.src);
+			console.log("Element loaded: ", element.nodeName);
 		}
 	});
 	</script>

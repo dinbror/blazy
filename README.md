@@ -39,14 +39,22 @@ Exchange `latest` with the specific version number if you want to lock it in.
 ## WHY BE LAZY? ##
 * bLazy is used on big sites with millions of monthly visitors so it has been tested out in the real world.
 * bLazy is written in pure JavaScript why it doesn’t depend on 3rd-party libraries such as jQuery.
+* bLazy is lightweight, less than 1.4KB and less than 1.25KB if you don't need IE7- support.
+* bLazy is very fast. It has focus on performance why it also auto-destroys when it's done lazy loading.
 * bLazy can lazy load all types of images including background images.
-* bLazy can lazy load images depending on screensize (multi-serve images).
+* bLazy is future-proof. It supports srcset and the picture element.
 * bLazy can serve retina images on retina devices.
-* bLazy can lazy load everything with a src like iframes, HTML5 videos, scripts, unity games etc. 
-* bLazy is lightweight, less than 1.2KB and less than 1.05KB if you don't need IE7- support.
+* bLazy can lazy load everything with a src like iframes, HTML5 videos, scripts, unity games etc.
+* bLazy supports all browsers used today including legacy browsers like IE7 and 8.
 * bLazy supports all main module formats like AMD, CommonJS and globals.  
 
 ## CHANGELOG
+### v 1.6.0 (2016/04/30) ###
+* Added support for srcset and the picture element. Fixed [#69](https://github.com/dinbror/blazy/issues/69), [#75](https://github.com/dinbror/blazy/issues/75), [#77](https://github.com/dinbror/blazy/issues/77) and [#82](https://github.com/dinbror/blazy/issues/82).
+* Added support for lazy load of videos with sources. Fixed [#81](https://github.com/dinbror/blazy/issues/81).
+* Bugfix. Ensuring that error and success classes won't be added multiple times. Fixed [#84](https://github.com/dinbror/blazy/issues/84).
+* Marked `breakpoints` as obsolete. Will be removed in upcoming version. Use srcset and/or the picture element instead.
+
 ### v 1.5.4 (2016/03/06) ###
 * Fixed two Safari bugs: [#66](https://github.com/dinbror/blazy/issues/66) and [#78](https://github.com/dinbror/blazy/issues/78). Ensuring "DOM ready".
 
