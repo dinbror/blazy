@@ -50,7 +50,7 @@ Exchange `latest` with the specific version number if you want to lock it in.
 
 ## CHANGELOG
 ### v 1.6.1 (2016/05/02) ###
-* Implemented a workaround for onLoad/onError bug introduced in chrome v50, [LINK](https://productforums.google.com/forum/#!topic/chrome/p51Lk7vnP2o). Fixed [#85](https://github.com/dinbror/blazy/issues/85).
+* Implemented a workaround for onload/onerror bug introduced in chrome v50, [LINK](https://productforums.google.com/forum/#!topic/chrome/p51Lk7vnP2o). Fixed [#85](https://github.com/dinbror/blazy/issues/85).
 
 ### v 1.6.0 (2016/04/30) ###
 * Added support for srcset and the picture element. Fixed [#69](https://github.com/dinbror/blazy/issues/69), [#75](https://github.com/dinbror/blazy/issues/75), [#77](https://github.com/dinbror/blazy/issues/77) and [#82](https://github.com/dinbror/blazy/issues/82).
