@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.6.0 - 2016.04.30
+  hey, [be]Lazy.js - v1.6.1 - 2016.05.02
   A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -180,11 +180,15 @@
                 // Image or background image
                 if (isImage || ele.src === undefined) {
                     var img = new Image();
-                    img.onerror = function() {
+					// using EventListener instead of onError and onLoad
+					// due to bug introduced in chrome v50 (https://productforums.google.com/forum/#!topic/chrome/p51Lk7vnP2o)
+					var onErrorHandler = function(){
                         if (options.error) options.error(ele, "invalid");
                         addClass(ele, options.errorClass);
-                    };
-                    img.onload = function() {
+						unbindEvent(img, 'error', onErrorHandler);
+						unbindEvent(img, 'load', onLoadHandler);
+					};
+					var onLoadHandler = function() {
                         // Is element an image
                         if (isImage) {
                             handleSource(ele, attrSrc, options.src); //src
@@ -201,7 +205,11 @@
                             ele.style.backgroundImage = 'url("' + src + '")';
                         }
                         itemLoaded(ele, options);
+						unbindEvent(img, 'load', onLoadHandler);
+						unbindEvent(img, 'error', onErrorHandler);
                     };
+					bindEvent(img, 'error', onErrorHandler);
+					bindEvent(img, 'load', onLoadHandler);
                     img.src = src; //preload
                 } else { // An item with src like iframe, unity, simpelvideo etc
                     handleSource(ele, attrSrc, options.src);
