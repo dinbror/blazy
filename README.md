@@ -49,6 +49,9 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy supports all main module formats like AMD, CommonJS and globals.  
 
 ## CHANGELOG
+### v 1.6.2 (2016/05/09) ###
+* Fixed bug introduced in v.1.6.0, not using retina/breakpoint src [#90](https://github.com/dinbror/blazy/issues/90).
+
 ### v 1.6.1 (2016/05/02) ###
 * Implemented a workaround for onload/onerror bug introduced in chrome v50, [LINK](https://productforums.google.com/forum/#!topic/chrome/p51Lk7vnP2o). Fixed [#85](https://github.com/dinbror/blazy/issues/85).
 

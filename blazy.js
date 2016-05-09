@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.6.1 - 2016.05.02
+  hey, [be]Lazy.js - v1.6.2 - 2016.05.09
   A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -21,8 +21,8 @@
     'use strict';
 
     //private vars
-    var source, viewport, isRetina, attrSrc = 'src',
-        attrSrcset = 'srcset';
+    var _source, _viewport, _isRetina, _attrSrc = 'src',
+        _attrSrcset = 'srcset';
 
     // constructor
     return function Blazy(options) {
@@ -59,11 +59,11 @@
         scope.options.validateDelay = scope.options.validateDelay || 25;
         scope.options.saveViewportOffsetDelay = scope.options.saveViewportOffsetDelay || 50;
         scope.options.srcset = scope.options.srcset || 'data-srcset';
-        scope.options.src = source = scope.options.src || 'data-src';
-        isRetina = window.devicePixelRatio > 1;
-        viewport = {};
-        viewport.top = 0 - scope.options.offset;
-        viewport.left = 0 - scope.options.offset;
+        scope.options.src = _source = scope.options.src || 'data-src';
+        _isRetina = window.devicePixelRatio > 1;
+        _viewport = {};
+        _viewport.top = 0 - scope.options.offset;
+        _viewport.left = 0 - scope.options.offset;
 
 
         /* public functions
@@ -109,7 +109,7 @@
         //handle multi-served image src (obsolete)
         each(scope.options.breakpoints, function(object) {
             if (object.width >= window.screen.width) {
-                source = object.src;
+                _source = object.src;
                 return false;
             }
         });
@@ -165,61 +165,62 @@
         var rect = ele.getBoundingClientRect();
         return (
             // Intersection
-            rect.right >= viewport.left && rect.bottom >= viewport.top && rect.left <= viewport.right && rect.top <= viewport.bottom
+            rect.right >= _viewport.left && rect.bottom >= _viewport.top && rect.left <= _viewport.right && rect.top <= _viewport.bottom
         );
     }
 
     function loadElement(ele, force, options) {
         // if element is visible, not loaded or forced
         if (!hasClass(ele, options.successClass) && (force || options.loadInvisible || (ele.offsetWidth > 0 && ele.offsetHeight > 0))) {
-            var dataSrc = ele.getAttribute(source) || ele.getAttribute(options.src); // fallback to default 'data-src'
+            var dataSrc = ele.getAttribute(_source) || ele.getAttribute(options.src); // fallback to default 'data-src'
             if (dataSrc) {
                 var dataSrcSplitted = dataSrc.split(options.separator);
-                var src = dataSrcSplitted[isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
+                var src = dataSrcSplitted[_isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
                 var isImage = equal(ele, 'img');
                 // Image or background image
                 if (isImage || ele.src === undefined) {
                     var img = new Image();
-					// using EventListener instead of onError and onLoad
-					// due to bug introduced in chrome v50 (https://productforums.google.com/forum/#!topic/chrome/p51Lk7vnP2o)
-					var onErrorHandler = function(){
+                    // using EventListener instead of onerror and onload
+                    // due to bug introduced in chrome v50 
+                    // (https://productforums.google.com/forum/#!topic/chrome/p51Lk7vnP2o)
+                    var onErrorHandler = function() {
                         if (options.error) options.error(ele, "invalid");
                         addClass(ele, options.errorClass);
-						unbindEvent(img, 'error', onErrorHandler);
-						unbindEvent(img, 'load', onLoadHandler);
-					};
-					var onLoadHandler = function() {
+                        unbindEvent(img, 'error', onErrorHandler);
+                        unbindEvent(img, 'load', onLoadHandler);
+                    };
+                    var onLoadHandler = function() {
                         // Is element an image
                         if (isImage) {
-                            handleSource(ele, attrSrc, options.src); //src
-                            handleSource(ele, attrSrcset, options.srcset); //srcset
+                            setSrc(ele, src); //src
+                            handleSource(ele, _attrSrcset, options.srcset); //srcset
                             //picture element
                             var parent = ele.parentNode;
                             if (parent && equal(parent, 'picture')) {
                                 each(parent.getElementsByTagName('source'), function(source) {
-                                    handleSource(source, attrSrcset, options.srcset);
+                                    handleSource(source, _attrSrcset, options.srcset);
                                 });
                             }
-                            // or background-image
+                        // or background-image
                         } else {
                             ele.style.backgroundImage = 'url("' + src + '")';
                         }
                         itemLoaded(ele, options);
-						unbindEvent(img, 'load', onLoadHandler);
-						unbindEvent(img, 'error', onErrorHandler);
+                        unbindEvent(img, 'load', onLoadHandler);
+                        unbindEvent(img, 'error', onErrorHandler);
                     };
-					bindEvent(img, 'error', onErrorHandler);
-					bindEvent(img, 'load', onLoadHandler);
-                    img.src = src; //preload
+                    bindEvent(img, 'error', onErrorHandler);
+                    bindEvent(img, 'load', onLoadHandler);
+                    setSrc(img, src); //preload
                 } else { // An item with src like iframe, unity, simpelvideo etc
-                    handleSource(ele, attrSrc, options.src);
+                    setSrc(ele, src);
                     itemLoaded(ele, options);
                 }
             } else {
                 // video with child source
                 if (equal(ele, 'video')) {
                     each(ele.getElementsByTagName('source'), function(source) {
-                        handleSource(source, attrSrc, options.src);
+                        handleSource(source, _attrSrc, options.src);
                     });
                     ele.load();
                     itemLoaded(ele, options);
@@ -235,9 +236,14 @@
         addClass(ele, options.successClass);
         if (options.success) options.success(ele);
         // cleanup markup, remove data source attributes
+        ele.removeAttribute(options.src);
         each(options.breakpoints, function(object) {
             ele.removeAttribute(object.src);
         });
+    }
+
+    function setSrc(ele, src) {
+        ele[_attrSrc] = src;
     }
 
     function handleSource(ele, attr, dataAttr) {
@@ -270,8 +276,8 @@
     }
 
     function saveViewportOffset(offset) {
-        viewport.bottom = (window.innerHeight || document.documentElement.clientHeight) + offset;
-        viewport.right = (window.innerWidth || document.documentElement.clientWidth) + offset;
+        _viewport.bottom = (window.innerHeight || document.documentElement.clientHeight) + offset;
+        _viewport.right = (window.innerWidth || document.documentElement.clientWidth) + offset;
     }
 
     function bindEvent(ele, type, fn) {
