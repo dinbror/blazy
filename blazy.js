@@ -58,6 +58,8 @@
         scope.options.successClass = scope.options.successClass || 'b-loaded';
         scope.options.validateDelay = scope.options.validateDelay || 25;
         scope.options.saveViewportOffsetDelay = scope.options.saveViewportOffsetDelay || 50;
+        scope.options.checkHorizontalElementVisibility = scope.options.checkHorizontalElementVisibility === false ? false : true;
+        scope.options.checkVerticalElementVisibility = scope.options.checkVerticalElementVisibility === false ? false : true;
         scope.options.srcset = scope.options.srcset || 'data-srcset';
         scope.options.src = _source = scope.options.src || 'data-src';
         _isRetina = window.devicePixelRatio > 1;
@@ -163,10 +165,19 @@
 
     function elementInView(ele) {
         var rect = ele.getBoundingClientRect();
-        return (
-            // Intersection
-            rect.right >= _viewport.left && rect.bottom >= _viewport.top && rect.left <= _viewport.right && rect.top <= _viewport.bottom
-        );
+
+        var isVisibleVertically = rect.bottom >= _viewport.top && rect.top <= _viewport.bottom;
+        var isVisibleHorizontally = rect.right >= _viewport.left && rect.left <= _viewport.right;
+
+        if (scope.options.checkVerticalElementVisibility && !isVisibleVertically) {
+            return false;
+        }
+
+        if (scope.options.checkHorizontalElementVisibility && !isVisibleHorizontally) {
+            return false;
+        }
+
+        return true;
     }
 
     function loadElement(ele, force, options) {
@@ -181,7 +192,7 @@
                 if (isImage || ele.src === undefined) {
                     var img = new Image();
                     // using EventListener instead of onerror and onload
-                    // due to bug introduced in chrome v50 
+                    // due to bug introduced in chrome v50
                     // (https://productforums.google.com/forum/#!topic/chrome/p51Lk7vnP2o)
                     var onErrorHandler = function() {
                         if (options.error) options.error(ele, "invalid");
