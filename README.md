@@ -1,5 +1,8 @@
-hey, be lazy
-=====
+#hey, be lazy
+[![Downloads](https://img.shields.io/npm/dm/blazy.svg?style=flat)](https://www.npmjs.com/package/blazy)
+[![Latest Stable Version](https://img.shields.io/npm/v/blazy.svg?style=flat)](https://www.npmjs.com/package/blazy)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dinbror/blazy/blob/master/LICENSE)
+
 bLazy is a lightweight script for lazy loading and multi-serving images, iframes, videos and more (less than 1.4KB minified and gzipped). It’s written in pure JavaScript why it doesn’t depend on 3rd-party libraries such as jQuery. It lets you lazy load and multi-serve your images so you can save bandwidth and server requests. The user will have faster load times and save data usage if he/she doesn't browse the whole page.
 
 **Table of Contents**<br>
