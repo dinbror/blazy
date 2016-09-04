@@ -284,7 +284,7 @@
         if (ele.attachEvent) {
             ele.attachEvent && ele.attachEvent('on' + type, fn);
         } else {
-            ele.addEventListener(type, fn, false);
+            ele.addEventListener(type, fn, { capture: false, passive: true });
         }
     }
 
@@ -292,7 +292,7 @@
         if (ele.detachEvent) {
             ele.detachEvent && ele.detachEvent('on' + type, fn);
         } else {
-            ele.removeEventListener(type, fn, false);
+            ele.removeEventListener(type, fn, { capture: false, passive: true });
         }
     }
 
