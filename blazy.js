@@ -49,6 +49,7 @@
         scope.options.error = scope.options.error || false;
         scope.options.offset = scope.options.offset || 100;
         scope.options.success = scope.options.success || false;
+        scope.options.parent = scope.options.parent || document;
         scope.options.selector = scope.options.selector || '.b-lazy';
         scope.options.separator = scope.options.separator || '|';
         scope.options.container = scope.options.container ? document.querySelectorAll(scope.options.container) : false;
@@ -127,7 +128,7 @@
     function initialize(self) {
         var util = self._util;
         // First we create an array of elements to lazy load
-        util.elements = toArray(self.options.selector);
+        util.elements = toArray(self.options.selector, self.options.parent);
         util.count = util.elements.length;
         // Then we bind resize and scroll events if not already binded
         if (util.destroyed) {
@@ -268,9 +269,9 @@
         }
     }
 
-    function toArray(selector) {
+    function toArray(selector, parent) {
         var array = [];
-        var nodelist = document.querySelectorAll(selector);
+        var nodelist = parent.querySelectorAll(selector);
         for (var i = nodelist.length; i--; array.unshift(nodelist[i])) {}
         return array;
     }
