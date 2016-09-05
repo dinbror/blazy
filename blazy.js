@@ -179,7 +179,6 @@
                 var isImage = equal(ele, 'img');
                 // Image or background image
                 if (isImage || ele.src === undefined) {
-                    var img = new Image();
                     // using EventListener instead of onerror and onload
                     // due to bug introduced in chrome v50 
                     // (https://productforums.google.com/forum/#!topic/chrome/p51Lk7vnP2o)
@@ -194,13 +193,6 @@
                         if (isImage) {
                             setSrc(ele, src); //src
                             handleSource(ele, _attrSrcset, options.srcset); //srcset
-                            //picture element
-                            var parent = ele.parentNode;
-                            if (parent && equal(parent, 'picture')) {
-                                each(parent.getElementsByTagName('source'), function(source) {
-                                    handleSource(source, _attrSrcset, options.srcset);
-                                });
-                            }
                         // or background-image
                         } else {
                             ele.style.backgroundImage = 'url("' + src + '")';
@@ -209,9 +201,22 @@
                         unbindEvent(img, 'load', onLoadHandler);
                         unbindEvent(img, 'error', onErrorHandler);
                     };
-                    bindEvent(img, 'error', onErrorHandler);
-                    bindEvent(img, 'load', onLoadHandler);
-                    setSrc(img, src); //preload
+
+                    //picture element
+                    var parent = ele.parentNode;
+                    if (parent && equal(parent, 'picture')) {
+                        setSrc(ele, src); //src
+                        handleSource(ele, _attrSrcset, options.srcset); //srcset
+                        each(parent.getElementsByTagName('source'), function(source) {
+                            handleSource(source, _attrSrcset, options.srcset);
+                        });
+                    }
+                    else {
+                        var img = new Image();
+                        bindEvent(img, 'error', onErrorHandler);
+                        bindEvent(img, 'load', onLoadHandler);
+                        setSrc(img, src); //preload
+                    }
                 } else { // An item with src like iframe, unity, simpelvideo etc
                     setSrc(ele, src);
                     itemLoaded(ele, options);
