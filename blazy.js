@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.6.2 - 2016.05.09
+  hey, [be]Lazy.js - v1.6.3 - 2016.09.30
   A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -48,6 +48,7 @@
         scope.options = options || {};
         scope.options.error = scope.options.error || false;
         scope.options.offset = scope.options.offset || 100;
+        scope.options.root = scope.options.root || document;
         scope.options.success = scope.options.success || false;
         scope.options.selector = scope.options.selector || '.b-lazy';
         scope.options.separator = scope.options.separator || '|';
@@ -127,7 +128,7 @@
     function initialize(self) {
         var util = self._util;
         // First we create an array of elements to lazy load
-        util.elements = toArray(self.options.selector);
+        util.elements = toArray(self.options);
         util.count = util.elements.length;
         // Then we bind resize and scroll events if not already binded
         if (util.destroyed) {
@@ -268,9 +269,9 @@
         }
     }
 
-    function toArray(selector) {
+    function toArray(options) {
         var array = [];
-        var nodelist = document.querySelectorAll(selector);
+        var nodelist = (options.root).querySelectorAll(options.selector);
         for (var i = nodelist.length; i--; array.unshift(nodelist[i])) {}
         return array;
     }
@@ -284,7 +285,7 @@
         if (ele.attachEvent) {
             ele.attachEvent && ele.attachEvent('on' + type, fn);
         } else {
-            ele.addEventListener(type, fn, false);
+            ele.addEventListener(type, fn, { capture: false, passive: true });
         }
     }
 
@@ -292,7 +293,7 @@
         if (ele.detachEvent) {
             ele.detachEvent && ele.detachEvent('on' + type, fn);
         } else {
-            ele.removeEventListener(type, fn, false);
+            ele.removeEventListener(type, fn, { capture: false, passive: true });
         }
     }
 

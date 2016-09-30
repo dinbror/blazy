@@ -52,6 +52,10 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy supports all main module formats like AMD, CommonJS and globals.  
 
 ## CHANGELOG
+### v 1.6.3 (2016/09/30) ###
+* Changed event listener to passive listener [#106](https://github.com/dinbror/blazy/pull/106). Thanks [@idoshamun](https://github.com/idoshamun)
+* Added support for web components (shadow dom) [#107](https://github.com/dinbror/blazy/pull/107). Thanks again [@idoshamun](https://github.com/idoshamun)
+
 ### v 1.6.2 (2016/05/09) ###
 * Fixed bug introduced in v.1.6.0, not using retina/breakpoint src [#90](https://github.com/dinbror/blazy/issues/90).
 
