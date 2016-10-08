@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.6.3 - 2016.09.30
+  hey, [be]Lazy.js - v1.6.4 - 2016.10.08
   A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -194,7 +194,6 @@
                         // Is element an image
                         if (isImage) {
                             handleSource(ele, _attrSrcset, options.srcset); //srcset
-                            setSrc(ele, src); //src
                             //picture element
                             var parent = ele.parentNode;
                             if (parent && equal(parent, 'picture')) {
@@ -202,6 +201,7 @@
                                     handleSource(source, _attrSrcset, options.srcset);
                                 });
                             }
+                            setSrc(ele, src); //src
                         // or background-image
                         } else {
                             ele.style.backgroundImage = 'url("' + src + '")';
