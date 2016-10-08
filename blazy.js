@@ -193,8 +193,8 @@
                     var onLoadHandler = function() {
                         // Is element an image
                         if (isImage) {
-                            setSrc(ele, src); //src
                             handleSource(ele, _attrSrcset, options.srcset); //srcset
+                            setSrc(ele, src); //src
                             //picture element
                             var parent = ele.parentNode;
                             if (parent && equal(parent, 'picture')) {
@@ -212,6 +212,12 @@
                     };
                     bindEvent(img, 'error', onErrorHandler);
                     bindEvent(img, 'load', onLoadHandler);
+                    
+                    // preloading srcset
+                    var dataSrc = ele.getAttribute(options.srcset);
+                    if (dataSrc) {
+                    	img[_attrSrcset] = dataSrc;
+                    }
                     setSrc(img, src); //preload
                 } else { // An item with src like iframe, unity, simpelvideo etc
                     setSrc(ele, src);
