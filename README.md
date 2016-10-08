@@ -52,6 +52,9 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy supports all main module formats like AMD, CommonJS and globals.  
 
 ## CHANGELOG
+### v 1.6.4 (2016/10/08) ###
+* Bugfix: When lazyloading srcset images it also loaded the fallback/regular image [#99](https://github.com/dinbror/blazy/pull/99). Thanks [@m0uH](https://github.com/m0uH)
+
 ### v 1.6.3 (2016/09/30) ###
 * Changed event listener to passive listener [#106](https://github.com/dinbror/blazy/pull/106). Thanks [@idoshamun](https://github.com/idoshamun)
 * Added support for web components (shadow dom) [#107](https://github.com/dinbror/blazy/pull/107). Thanks again [@idoshamun](https://github.com/idoshamun)
