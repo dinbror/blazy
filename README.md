@@ -51,6 +51,15 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * bLazy supports all browsers used today including legacy browsers like IE7 and 8.
 * bLazy supports all main module formats like AMD, CommonJS and globals.  
 
+
+## WISHLIST/NEW FEATURES REQUESTED BY YOU
+* Only preload "first frame" of progressive jpegs.
+* Add support for CSS background property; [image-set](https://cloudfour.com/examples/image-set/) ([caniuse](http://caniuse.com/#feat=css-image-set)). 
+* Add a class when the lazyloading begins.
+* Option to keen load once on screen images have loaded.
+* Add option to disable success/error classes
+* Animate the container that contains the image you lazy load. You can do that today by adding/removing a class in the success callback.
+
 ## CHANGELOG
 ### v 1.6.4 (2016/10/08) ###
 * Bugfix: When lazyloading srcset images it also loaded the fallback/regular image [#99](https://github.com/dinbror/blazy/pull/99). Thanks [@m0uH](https://github.com/m0uH)
