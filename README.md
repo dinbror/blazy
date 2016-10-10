@@ -61,6 +61,10 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * Animate the container that contains the image you lazy load. You can do that today by adding/removing a class in the success callback.
 
 ## CHANGELOG
+### v 1.7.0 (2016/10/10) ###
+* Bugfix: When lazyloading picture elements it also loaded the fallback/regular image [#92](https://github.com/dinbror/blazy/issues/92) and [108](https://github.com/dinbror/blazy/pull/108). Thanks [@idoshamun](https://github.com/idoshamun)
+* Refactored loadElement function to avoid redundancy. 
+
 ### v 1.6.4 (2016/10/08) ###
 * Bugfix: When lazyloading srcset images it also loaded the fallback/regular image [#99](https://github.com/dinbror/blazy/pull/99). Thanks [@m0uH](https://github.com/m0uH)
 
