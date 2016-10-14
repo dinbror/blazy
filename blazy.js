@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.7.0 - 2016.10.10
+  hey, [be]Lazy.js - v1.7.1 - 2016.10.14
   A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -251,13 +251,13 @@
     }
 
     function setSrc(ele, src) {
-        ele[_attrSrc] = src;
+        ele.setAttribute(_attrSrc, src);
     }
 
     function handleSource(ele, attr, dataAttr) {
         var dataSrc = ele.getAttribute(dataAttr);
         if (dataSrc) {
-            ele[attr] = dataSrc;
+            ele.setAttribute(attr, dataSrc);
             ele.removeAttribute(dataAttr);
         }
     }

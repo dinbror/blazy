@@ -1,7 +1,7 @@
 {
 	"name": "bLazy",
 	"main": "blazy.js",
-	"version": "1.7.0",
+	"version": "1.7.1",
 	"description": "A fast lightweight pure JavaScript script for lazy loading and multi-serving images, iframes, videos and more.",
 	"homepage": "https://github.com/dinbror/blazy",
 	"keywords": [
