@@ -68,18 +68,30 @@
 	  }
 	  .container {
 		  background-color: #1E1E1E;
-		  overflow-x: scroll;
-		  overflow-y: hidden;
 		  height:0;
 		  padding-bottom:66%;
 	  }
-	  .list{
+	  .horizontal.container{
+	  	  overflow-x: scroll;
+		  overflow-y: hidden;
+	  }
+	  .horizontal .list{
 		  font-size:0;
 		  width:300%;
 	  }
-	  .list .wrapper {
+	  .horizontal .list .wrapper {
 		  display: inline-block;
 		  width:33.3%;
+	  }
+	  .vertical.container{
+	  	  overflow-x: hidden;
+		  overflow-y: scroll;
+	  }
+	  .vertical .list{
+	  	  width: 100%;
+	  }
+	  .vertical .list .wrapper{
+	  	  width: 100%;
 	  }
 	  img {
 		  max-width: 100%;
@@ -154,18 +166,18 @@
 			</ol>
 			<h2>Examples</h2>
 			<ol>
-				<li>Lazy load images</li>
-				<li>Lazy load background image</li>
-				<li>Horizontal lazy load</li>
-				<li>Lazy load iframe</li>
-				<li>Lazy load HTML5 video</li>
-				<li>Lazy load script file</li>
+				<li><a href="#image">Lazy load images, regular, retina, srcset and picture element</a></li>
+				<li><a href="#background-image">Lazy load background image</a></li>
+				<li><a href="#image-inside-container">Lazy load inside container (vertical & horizotal)</a></li>
+				<li><a href="#iframe">Lazy load iframe</a></li>
+				<li><a href="#html5-video">Lazy load HTML5 video</a></li>
+				<li><a href="#script">Lazy load script file</a></li>
 			</ol>
 		</div>
 		<a class="github" href="https://github.com/dinbror/blazy/"></a>
 	</div>
 	<div class="section">
-		<div class="example">
+		<div class="example" id="image">
 			<h2>1.1: Default lazyload image example</h2>
 			<div class="wrapper ratio">
 			    <img class="b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/01.jpg" alt="Lazy load images example 1a" />
@@ -227,26 +239,26 @@
 				<picture>
 				  <source 
 				    media="(min-width: 650px)"
-				    data-srcset="http://placehold.it/1024x682?text=Min-650">
+				    data-srcset="http://placehold.it/1024x682?text=Min-650" />
 				  <source 
 				    media="(min-width: 465px)"
-				    data-srcset="http://placehold.it/600x400?text=Min-465">
+				    data-srcset="http://placehold.it/600x400?text=Min-465" />
 				  <img 
 				  	class="b-lazy"
 				    data-src="http://placehold.it/600x400?text=default" 
-				    alt="Lazy load image example with picture element">
+				    alt="Lazy load image example with picture element" />
 				</picture>
 			</div>
 			<pre>
     &lt;picture&gt; 
         &lt;source 
              media=&quot;(min-width: 650px)&quot;
-             data-srcset=&quot;image-650.jpg&quot;&gt; 
+             data-srcset=&quot;image-650.jpg&quot; /&gt; 
         &lt;source 
              media=&quot;(min-width: 465px)&quot; 
-             data-srcset=&quot;image-465.jpg&quot;&gt;
+             data-srcset=&quot;image-465.jpg&quot; /&gt;
         &lt;img class=&quot;b-lazy&quot;
-             data-src=&quot;default.jpg&quot;&gt;
+             data-src=&quot;default.jpg&quot; /&gt;
     &lt;/picture&gt;
 			</pre>
 		</div>
@@ -259,7 +271,7 @@
     &lt;img class="b-lazy" data-src=&quot;image.jpg|retina-image.jpg&quot; /&gt;
 			</pre>
 		</div>
-		<div class="example">
+		<div class="example" id="background-image">
 			<h2>2: Lazy load background image example</h2>
 			<div class="wrapper ratio">
 			    <div class="b-lazy" data-src="http://cdn.dinbror.dk/assets/blazy/05.jpg"></div>
@@ -268,9 +280,9 @@
     &lt;div class="b-lazy" data-src=&quot;image.jpg&quot;&gt;&lt;/div&gt;
 			</pre>
 		</div>
-		<div class="example">
-			<h2>3: Horizontal lazyload inside container example</h2>
-			<div class="container">
+		<div class="example" id="image-inside-container">
+			<h2>3.1: Horizontal lazyload inside container example</h2>
+			<div class="container horizontal">
 				<ul class="list">
 					<li class="wrapper ratio">
 					    <img class="b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/04.jpg" alt="Lazy load images example 3 image 1" />
@@ -290,6 +302,27 @@
 			</pre>
 		</div>
 		<div class="example">
+			<h2>3.2: Vertical lazyload inside container example</h2>
+			<div class="container vertical">
+				<ul class="list">
+					<li class="wrapper ratio">
+					    <img class="b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/04.jpg" alt="Lazy load images example 3 image 1" />
+					</li>
+					<li class="wrapper ratio">
+					    <img class="b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/05.jpg" alt="Lazy load images example 3 image 2" />
+					</li>
+					<li class="wrapper ratio">
+					    <img class="b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-src="http://cdn.dinbror.dk/assets/blazy/06.jpg" alt="Lazy load images example 3 image 3" />
+					</li>
+				</ul>
+			</div>
+			<pre>
+    var blazy = new Blazy({
+	container: '.container'
+    });
+			</pre>
+		</div>
+		<div class="example" id="iframe">
 			<h2>4: Lazy load iframe example</h2>
 			<div class="wrapper ratio">
 				<iframe class="b-lazy" data-src="https://www.youtube.com/embed/uKtjVQ5IJOQ" frameborder="0" allowfullscreen></iframe>
@@ -302,7 +335,7 @@
     &lt;/iframe&gt;
 			</pre>
 		</div>
-		<div class="example">
+		<div class="example" id="html5-video">
 			<h2>5.1: Lazy load HTML5 video example</h2>
 			<div class="wrapper ratio">
 			    <video class="b-lazy" data-src="http://cdn.dinbror.dk/assets/blazy/SampleVideo_1280x720_1mb.mp4" controls></video>
@@ -328,7 +361,7 @@
     &lt;/video&gt;
 			</pre>
 		</div>
-		<div class="example">
+		<div class="example" id="script">
 			<h2>6: Lazy load script example</h2>
 			<script class="b-lazy" data-src="script.js" async></script>
 			<p>Check the console log</p>

@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.7.1 - 2016.10.14
+  hey, [be]Lazy.js - v1.8.0 - 2016.10.16
   A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -52,9 +52,10 @@
         scope.options.success = scope.options.success || false;
         scope.options.selector = scope.options.selector || '.b-lazy';
         scope.options.separator = scope.options.separator || '|';
-        scope.options.container = scope.options.container ? document.querySelectorAll(scope.options.container) : false;
+        scope.options.containerClass = scope.options.container;
+        scope.options.container = scope.options.containerClass ? document.querySelectorAll(scope.options.containerClass) : false;
         scope.options.errorClass = scope.options.errorClass || 'b-error';
-        scope.options.breakpoints = scope.options.breakpoints || false; // obsolete
+        scope.options.breakpoints = scope.options.breakpoints || false;
         scope.options.loadInvisible = scope.options.loadInvisible || false;
         scope.options.successClass = scope.options.successClass || 'b-loaded';
         scope.options.validateDelay = scope.options.validateDelay || 25;
@@ -150,7 +151,7 @@
         var util = self._util;
         for (var i = 0; i < util.count; i++) {
             var element = util.elements[i];
-            if (elementInView(element) || hasClass(element, self.options.successClass)) {
+            if (elementInView(element, self.options) || hasClass(element, self.options.successClass)) {
                 self.load(element);
                 util.elements.splice(i, 1);
                 util.count--;
@@ -162,22 +163,48 @@
         }
     }
 
-    function elementInView(ele) {
+    function elementInView(ele, options) {
         var rect = ele.getBoundingClientRect();
-        return (
-            // Intersection
-            rect.right >= _viewport.left && rect.bottom >= _viewport.top && rect.left <= _viewport.right && rect.top <= _viewport.bottom
-        );
+
+        if(options.container){
+            // Is element inside a container?
+            var elementContainer = ele.closest(options.containerClass);
+            if(elementContainer){
+                var containerRect = elementContainer.getBoundingClientRect();
+                // Is container in view?
+                if(inView(containerRect, _viewport)){
+                    var containerRectWithOffset = {
+                        top: containerRect.top - options.offset,
+                        right: containerRect.right + options.offset,
+                        bottom: containerRect.bottom + options.offset,
+                        left: containerRect.left - options.offset
+                    };
+                    // Is element in view of container?
+                    return inView(rect, containerRectWithOffset);
+                } else {
+                    return false;
+                }
+            }
+        }      
+        return inView(rect, _viewport);
+    }
+
+    function inView(rect, viewport){
+        // Intersection
+        return rect.right >= viewport.left &&
+               rect.bottom >= viewport.top && 
+               rect.left <= viewport.right && 
+               rect.top <= viewport.bottom;
     }
 
     function loadElement(ele, force, options) {
         // if element is visible, not loaded or forced
         if (!hasClass(ele, options.successClass) && (force || options.loadInvisible || (ele.offsetWidth > 0 && ele.offsetHeight > 0))) {
-            var dataSrc = ele.getAttribute(_source) || ele.getAttribute(options.src); // fallback to default 'data-src'
+            var dataSrc = getAttr(ele, _source) || getAttr(ele, options.src); // fallback to default 'data-src'
             if (dataSrc) {
                 var dataSrcSplitted = dataSrc.split(options.separator);
                 var src = dataSrcSplitted[_isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
-                var srcset = ele.getAttribute(options.srcset);
+                var srcset = getAttr(ele, options.srcset);
                 var isImage = equal(ele, 'img');
                 var parent = ele.parentNode;
                 var isPicture = parent && equal(parent, 'picture');
@@ -219,8 +246,8 @@
                     bindEvent(img, 'load', onLoadHandler);
                     handleSources(img, src, srcset); // Preload
 
-                } else { // An item with src like iframe, unity, simpelvideo etc
-                    setSrc(ele, src);
+                } else { // An item with src like iframe, unity games, simpel video etc
+                    ele.src = src;
                     itemLoaded(ele, options);
                 }
             } else {
@@ -243,30 +270,38 @@
         addClass(ele, options.successClass);
         if (options.success) options.success(ele);
         // cleanup markup, remove data source attributes
-        ele.removeAttribute(options.src);
-        ele.removeAttribute(options.srcset);
+        removeAttr(ele, options.src);
+        removeAttr(ele, options.srcset);
         each(options.breakpoints, function(object) {
-            ele.removeAttribute(object.src);
+            removeAttr(ele, object.src);
         });
     }
 
-    function setSrc(ele, src) {
-        ele.setAttribute(_attrSrc, src);
-    }
-
     function handleSource(ele, attr, dataAttr) {
-        var dataSrc = ele.getAttribute(dataAttr);
+        var dataSrc = getAttr(ele, dataAttr);
         if (dataSrc) {
-            ele.setAttribute(attr, dataSrc);
-            ele.removeAttribute(dataAttr);
+            setAttr(ele, attr, dataSrc);
+            removeAttr(ele, dataAttr);
         }
     }
 
     function handleSources(ele, src, srcset){
         if(srcset) {
-            ele[_attrSrcset] = srcset; //srcset
+            setAttr(ele, _attrSrcset, srcset); //srcset
         }
-        setSrc(ele, src); //src 
+        ele.src = src; //src 
+    }
+
+    function setAttr(ele, attr, value){
+        ele.setAttribute(attr, value);
+    }
+
+    function getAttr(ele, attr) {
+        return ele.getAttribute(attr);
+    }
+
+    function removeAttr(ele, attr){
+        ele.removeAttribute(attr); 
     }
 
     function equal(ele, str) {
