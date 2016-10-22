@@ -61,6 +61,9 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * Animate the container that contains the image you lazy load. You can do that today by adding/removing a class in the success callback.
 
 ## CHANGELOG
+### v 1.8.1 (2016/10/22) ###
+* Bugfix: Created polyfill and check for support of `Element.closest` which was introduced in the container fix in v. 1.8.0.
+
 ### v 1.8.0 (2016/10/16) ###
 * Bugfix: Non-visible images being loaded inside container [#23](https://github.com/dinbror/blazy/issues/23) and [#96](https://github.com/dinbror/blazy/issues/96).
 

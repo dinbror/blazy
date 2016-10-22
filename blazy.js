@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.8.0 - 2016.10.16
+  hey, [be]Lazy.js - v1.8.1 - 2016.10.22
   A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -21,8 +21,7 @@
     'use strict';
 
     //private vars
-    var _source, _viewport, _isRetina, _attrSrc = 'src',
-        _attrSrcset = 'srcset';
+    var _source, _viewport, _isRetina, _supportClosest, _attrSrc = 'src', _attrSrcset = 'srcset';
 
     // constructor
     return function Blazy(options) {
@@ -62,6 +61,7 @@
         scope.options.saveViewportOffsetDelay = scope.options.saveViewportOffsetDelay || 50;
         scope.options.srcset = scope.options.srcset || 'data-srcset';
         scope.options.src = _source = scope.options.src || 'data-src';
+        _supportClosest = Element.prototype.closest;
         _isRetina = window.devicePixelRatio > 1;
         _viewport = {};
         _viewport.top = 0 - scope.options.offset;
@@ -166,7 +166,7 @@
     function elementInView(ele, options) {
         var rect = ele.getBoundingClientRect();
 
-        if(options.container){
+        if(options.container && _supportClosest){
             // Is element inside a container?
             var elementContainer = ele.closest(options.containerClass);
             if(elementContainer){
