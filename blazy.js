@@ -174,10 +174,10 @@
                 // Is container in view?
                 if(inView(containerRect, _viewport)){
                     var containerRectWithOffset = {
-                        top: containerRect.top - options.offset,
-                        right: containerRect.right + options.offset,
-                        bottom: containerRect.bottom + options.offset,
-                        left: containerRect.left - options.offset
+                        top: ((containerRect.top - options.offset) < _viewport.top) ? containerRect.top - options.offset : _viewport.top,
+                        right: ((containerRect.right + options.offset) > _viewport.right) ? containerRect.right + options.offset : _viewport.right,
+                        bottom: ((containerRect.bottom + options.offset) < _viewport.bottom) ? containerRect.bottom + options.offset : _viewport.bottom,
+                        left: ((containerRect.left - options.offset) < _viewport.left) ? containerRect.left - options.offset : _viewport.left
                     };
                     // Is element in view of container?
                     return inView(rect, containerRectWithOffset);
