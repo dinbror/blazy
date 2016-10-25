@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.8.0 - 2016.10.16
+  hey, [be]Lazy.js - v1.8.2 - 2016.10.25
   A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -21,8 +21,7 @@
     'use strict';
 
     //private vars
-    var _source, _viewport, _isRetina, _attrSrc = 'src',
-        _attrSrcset = 'srcset';
+    var _source, _viewport, _isRetina, _supportClosest, _attrSrc = 'src', _attrSrcset = 'srcset';
 
     // constructor
     return function Blazy(options) {
@@ -62,6 +61,7 @@
         scope.options.saveViewportOffsetDelay = scope.options.saveViewportOffsetDelay || 50;
         scope.options.srcset = scope.options.srcset || 'data-srcset';
         scope.options.src = _source = scope.options.src || 'data-src';
+        _supportClosest = Element.prototype.closest;
         _isRetina = window.devicePixelRatio > 1;
         _viewport = {};
         _viewport.top = 0 - scope.options.offset;
@@ -71,11 +71,11 @@
         /* public functions
          ************************************/
         scope.revalidate = function() {
-            initialize(this);
+            initialize(scope);
         };
         scope.load = function(elements, force) {
             var opt = this.options;
-            if (elements.length === undefined) {
+            if (elements && elements.length === undefined) {
                 loadElement(elements, force, opt);
             } else {
                 each(elements, function(element) {
@@ -83,11 +83,10 @@
                 });
             }
         };
-        scope.destroy = function() {
-            var self = this;
-            var util = self._util;
-            if (self.options.container) {
-                each(self.options.container, function(object) {
+        scope.destroy = function() {            
+            var util = scope._util;
+            if (scope.options.container) {
+                each(scope.options.container, function(object) {
                     unbindEvent(object, 'scroll', util.validateT);
                 });
             }
@@ -166,18 +165,22 @@
     function elementInView(ele, options) {
         var rect = ele.getBoundingClientRect();
 
-        if(options.container){
+        if(options.container && _supportClosest){
             // Is element inside a container?
             var elementContainer = ele.closest(options.containerClass);
             if(elementContainer){
                 var containerRect = elementContainer.getBoundingClientRect();
                 // Is container in view?
                 if(inView(containerRect, _viewport)){
+                    var top = containerRect.top - options.offset;
+                    var right = containerRect.right + options.offset;
+                    var bottom = containerRect.bottom + options.offset;
+                    var left = containerRect.left - options.offset;
                     var containerRectWithOffset = {
-                        top: containerRect.top - options.offset,
-                        right: containerRect.right + options.offset,
-                        bottom: containerRect.bottom + options.offset,
-                        left: containerRect.left - options.offset
+                        top: top > _viewport.top ? top : _viewport.top,
+                        right: right < _viewport.right ? right : _viewport.right,
+                        bottom: bottom < _viewport.bottom ? bottom : _viewport.bottom,
+                        left: left > _viewport.left ? left : _viewport.left
                     };
                     // Is element in view of container?
                     return inView(rect, containerRectWithOffset);
