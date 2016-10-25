@@ -61,6 +61,11 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * Animate the container that contains the image you lazy load. You can do that today by adding/removing a class in the success callback.
 
 ## CHANGELOG
+### v 1.8.2 (2016/10/25) ###
+* Added null check in public `load` function.
+* Bugfix: Fixed `this` issue defaulting to window when passing `revalidate` or `destroy` in setTimeout as reference [#73](https://github.com/dinbror/blazy/issues/73) and [#112](https://github.com/dinbror/blazy/pull/112). Thanks [PeteDuncanson](https://github.com/PeteDuncanson).
+* Bugfix: If parts of container is outside window use the viewport boundaries [#113](https://github.com/dinbror/blazy/issues/113) and [#114](https://github.com/dinbror/blazy/pull/114). Thanks [dbirkbeck](https://github.com/dbirkbeck).
+
 ### v 1.8.1 (2016/10/22) ###
 * Bugfix: Created polyfill and check for support of `Element.closest` which was introduced in the container fix in v. 1.8.0.
 

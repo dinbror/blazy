@@ -1,5 +1,5 @@
 /*!
-  hey, [be]Lazy.js - v1.8.1 - 2016.10.22
+  hey, [be]Lazy.js - v1.8.2 - 2016.10.25
   A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
   (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
 */
@@ -75,7 +75,7 @@
         };
         scope.load = function(elements, force) {
             var opt = this.options;
-            if (elements.length === undefined) {
+            if (elements && elements.length === undefined) {
                 loadElement(elements, force, opt);
             } else {
                 each(elements, function(element) {
@@ -83,11 +83,10 @@
                 });
             }
         };
-        scope.destroy = function() {
-            var self = this;
-            var util = self._util;
-            if (self.options.container) {
-                each(self.options.container, function(object) {
+        scope.destroy = function() {            
+            var util = scope._util;
+            if (scope.options.container) {
+                each(scope.options.container, function(object) {
                     unbindEvent(object, 'scroll', util.validateT);
                 });
             }
@@ -173,11 +172,15 @@
                 var containerRect = elementContainer.getBoundingClientRect();
                 // Is container in view?
                 if(inView(containerRect, _viewport)){
+                    var top = containerRect.top - options.offset;
+                    var right = containerRect.right + options.offset;
+                    var bottom = containerRect.bottom + options.offset;
+                    var left = containerRect.left - options.offset;
                     var containerRectWithOffset = {
-                        top: containerRect.top - options.offset,
-                        right: containerRect.right + options.offset,
-                        bottom: containerRect.bottom + options.offset,
-                        left: containerRect.left - options.offset
+                        top: top > _viewport.top ? top : _viewport.top,
+                        right: right < _viewport.right ? right : _viewport.right,
+                        bottom: bottom < _viewport.bottom ? bottom : _viewport.bottom,
+                        left: left > _viewport.left ? left : _viewport.left
                     };
                     // Is element in view of container?
                     return inView(rect, containerRectWithOffset);
