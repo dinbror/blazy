@@ -71,7 +71,7 @@
         /* public functions
          ************************************/
         scope.revalidate = function() {
-            initialize(this);
+            initialize(scope);
         };
         scope.load = function(elements, force) {
             var opt = this.options;
