@@ -201,6 +201,17 @@
     }
 
     function loadElement(ele, force, options) {
+        // if element has src attribute but doesn't have width or height,
+        // the reason may be that the palceholder image has not yet loaded,
+        // so bind this function to its load event to evaluate accurately.
+        if (ele.getAttribute('src') && (ele.offsetWidth == 0 || ele.offsetHeight == 0)) {
+            var onLoadHandlerTemp = function() {
+                unbindEvent(ele, 'load', onLoadHandlerTemp);
+                loadElement(ele, force, options);
+            };
+            bindEvent(ele, 'load', onLoadHandlerTemp);
+            return;
+        }
         // if element is visible, not loaded or forced
         if (!hasClass(ele, options.successClass) && (force || options.loadInvisible || (ele.offsetWidth > 0 && ele.offsetHeight > 0))) {
             var dataSrc = getAttr(ele, _source) || getAttr(ele, options.src); // fallback to default 'data-src'
