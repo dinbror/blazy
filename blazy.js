@@ -148,11 +148,9 @@
 
     function validate(self) {
         var util = self._util;
-        var element;
-        var element_;
         for (var i = 0; i < util.count; i++) {
-            element = util.elements[i];
-            element_ = undefined;
+            var element = util.elements[i];
+            var element_ = undefined;
 
             if($(element)[0].tagName == 'SCRIPT') {
                 element_ = element;
