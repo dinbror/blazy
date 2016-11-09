@@ -156,10 +156,14 @@
 
             if($(element)[0].tagName == 'SCRIPT') {
                 element_ = element;
-                element = $(element).parent()[0];
+                element = $(element).parents('div')[0];
+
+                if($(element_).attr('data-parent')) {
+                    element = $('#' + $(element_).attr('data-parent'))[0];                    
+                }
             }
 
-            if (elementInView(element, self.options) || hasClass(element, self.options.successClass) || $(element)[0].tagName == 'SCRIPT') {
+            if (elementInView(element_ || element, self.options) || hasClass(element, self.options.successClass) || (element_ != undefined && elementInView(element_ || element, self.options) && $(element_)[0].tagName == 'SCRIPT')) {
 
                 if(element_ !== undefined && $(element_)[0].tagName == 'SCRIPT') {
                     element = element_;
@@ -180,8 +184,11 @@
         var rect = ele.getBoundingClientRect();
 
         if(ele.tagName == 'SCRIPT') {
-            rect = $(ele).parent()[0];
-            console.log('rect', rect);
+            rect = $(ele).parents('div')[0].getBoundingClientRect();
+
+            if($(ele).attr('data-parent')) {
+                rect = $('#' + $(ele).attr('data-parent'))[0].getBoundingClientRect();
+            }
         }
 
         if(options.container && _supportClosest){
@@ -226,6 +233,10 @@
         if($(ele)[0].tagName == 'SCRIPT') {
             ele_ = ele;
             ele = $(ele).parent()[0];
+
+            if($(ele_).attr('data-parent')) {
+                ele = $('#' + $(ele_).attr('data-parent'))[0];                    
+            }
         }
 
         if (!hasClass(ele, options.successClass) && (force || options.loadInvisible || (ele.offsetWidth > 0 && ele.offsetHeight > 0))) {
