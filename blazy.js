@@ -88,6 +88,8 @@
             if (scope.options.container) {
                 each(scope.options.container, function(object) {
                     unbindEvent(object, 'scroll', util.validateT);
+                    unbindEvent(object, 'transitionend', util.validateT);
+                    unbindEvent(object, 'webkitTransitionEnd', util.validateT);
                 });
             }
             unbindEvent(window, 'scroll', util.validateT);
@@ -136,6 +138,8 @@
             if (self.options.container) {
                 each(self.options.container, function(object) {
                     bindEvent(object, 'scroll', util.validateT);
+                    bindEvent(object, 'transitionend', util.validateT);
+                    bindEvent(object, 'webkitTransitionEnd', util.validateT);
                 });
             }
             bindEvent(window, 'resize', util.saveViewportOffsetT);
