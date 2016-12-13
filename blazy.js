@@ -150,7 +150,23 @@
         var util = self._util;
         for (var i = 0; i < util.count; i++) {
             var element = util.elements[i];
-            if (elementInView(element, self.options) || hasClass(element, self.options.successClass)) {
+            var element_ = undefined;
+
+            if($(element)[0].tagName == 'SCRIPT') {
+                element_ = element;
+                element = $(element).parents('div')[0];
+
+                if($(element_).attr('data-parent')) {
+                    element = $('#' + $(element_).attr('data-parent'))[0];                    
+                }
+            }
+
+            if (elementInView(element_ || element, self.options) || hasClass(element, self.options.successClass) || (element_ != undefined && elementInView(element_ || element, self.options) && $(element_)[0].tagName == 'SCRIPT')) {
+
+                if(element_ !== undefined && $(element_)[0].tagName == 'SCRIPT') {
+                    element = element_;
+                }
+              
                 self.load(element);
                 util.elements.splice(i, 1);
                 util.count--;
@@ -164,6 +180,14 @@
 
     function elementInView(ele, options) {
         var rect = ele.getBoundingClientRect();
+
+        if(ele.tagName == 'SCRIPT') {
+            rect = $(ele).parents('div, p, article').not(':hidden')[0].getBoundingClientRect();
+
+            if($(ele).attr('data-parent')) {
+                rect = $('#' + $(ele).attr('data-parent'))[0].getBoundingClientRect();
+            }
+        }
 
         if(options.container && _supportClosest){
             // Is element inside a container?
@@ -202,7 +226,22 @@
 
     function loadElement(ele, force, options) {
         // if element is visible, not loaded or forced
+        var ele_;
+
+        if($(ele)[0].tagName == 'SCRIPT') {
+            ele_ = ele;
+            ele = $(ele).parent()[0];
+
+            if($(ele_).attr('data-parent')) {
+                ele = $('#' + $(ele_).attr('data-parent'))[0];                    
+            }
+        }
+
         if (!hasClass(ele, options.successClass) && (force || options.loadInvisible || (ele.offsetWidth > 0 && ele.offsetHeight > 0))) {
+            if(ele_ !== undefined && $(ele_)[0].tagName == 'SCRIPT') {
+                ele = ele_;
+            }
+          
             var dataSrc = getAttr(ele, _source) || getAttr(ele, options.src); // fallback to default 'data-src'
             if (dataSrc) {
                 var dataSrcSplitted = dataSrc.split(options.separator);
@@ -250,8 +289,17 @@
                     handleSources(img, src, srcset); // Preload
 
                 } else { // An item with src like iframe, unity games, simpel video etc
-                    ele.src = src;
-                    itemLoaded(ele, options);
+                    //ele.src = src;
+                    //itemLoaded(ele, options);
+
+                    if($(ele)[0].tagName == 'SCRIPT') {
+                        $.getScript($(ele_).attr('data-src'));
+                        itemLoaded(ele, options);
+                        $(ele_).remove();
+                    } else {
+                        ele.src = src;
+                        itemLoaded(ele, options);
+                    }
                 }
             } else {
                 // video with child source
