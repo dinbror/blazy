@@ -182,7 +182,7 @@
         var rect = ele.getBoundingClientRect();
 
         if(ele.tagName == 'SCRIPT') {
-            rect = $(ele).parents('div')[0].getBoundingClientRect();
+            rect = $(ele).parents('div, p, article').not(':hidden')[0].getBoundingClientRect();
 
             if($(ele).attr('data-parent')) {
                 rect = $('#' + $(ele).attr('data-parent'))[0].getBoundingClientRect();
