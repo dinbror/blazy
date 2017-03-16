@@ -200,7 +200,7 @@
                rect.top <= viewport.bottom;
     }
 
-    function loadElement(ele, force, options) {
+    function loadElement(ele, force, options, parentCallback) {
         // if element is visible, not loaded or forced
         if (!hasClass(ele, options.successClass) && (force || options.loadInvisible || (ele.offsetWidth > 0 && ele.offsetHeight > 0))) {
             var dataSrc = getAttr(ele, _source) || getAttr(ele, options.src); // fallback to default 'data-src'
@@ -233,7 +233,8 @@
                         } else {
                             ele.style.backgroundImage = 'url("' + src + '")';
                         }
-                        itemLoaded(ele, options);
+                        itemLoaded(ele, options, !parentCallback);
+						if(parentCallback) parentCallback();
                         unbindEvent(img, 'load', onLoadHandler);
                         unbindEvent(img, 'error', onErrorHandler);
                     };
@@ -251,27 +252,36 @@
 
                 } else { // An item with src like iframe, unity games, simpel video etc
                     ele.src = src;
-                    itemLoaded(ele, options);
+					if(equal(ele, 'source')) {
+						parent.load();
+					}
+                    itemLoaded(ele, options, !parentCallback);
+					if(parentCallback) parentCallback();
                 }
-            } else {
-                // video with child source
-                if (equal(ele, 'video')) {
-                    each(ele.getElementsByTagName('source'), function(source) {
-                        handleSource(source, _attrSrc, options.src);
-                    });
-                    ele.load();
-                    itemLoaded(ele, options);
-                } else {
-                    if (options.error) options.error(ele, "missing");
-                    addClass(ele, options.errorClass);
-                }
+            } else { // a wrapper with tags inside that should be loaded at once
+				var childElements = ele.querySelectorAll('[data-src]');
+				if(childElements) {
+					var counter = 0;
+					var childElementLoaded = function() {
+						counter++;
+						if(counter == childElements.length) {
+							itemLoaded(ele, options, true);
+						}
+					};
+					for(var i = 0; i < childElements.length; i++) {
+						loadElement(childElements[i], force, options, childElementLoaded);
+					}
+				} else {
+					if (options.error) options.error(ele, "missing");
+					addClass(ele, options.errorClass);
+				}
             }
         }
     }
 
-    function itemLoaded(ele, options) {
+    function itemLoaded(ele, options, finishedLoading) {
         addClass(ele, options.successClass);
-        if (options.success) options.success(ele);
+        if (options.success && finishedLoading) options.success(ele);
         // cleanup markup, remove data source attributes
         removeAttr(ele, options.src);
         removeAttr(ele, options.srcset);
