@@ -218,8 +218,12 @@
                     // due to bug introduced in chrome v50 
                     // (https://productforums.google.com/forum/#!topic/chrome/p51Lk7vnP2o)
                     var onErrorHandler = function() {
-                        if (options.error) options.error(ele, "invalid");
-                        addClass(ele, options.errorClass);
+						if(parentCallback) {
+							parentCallback(true);
+						} else {
+							if (options.error) options.error(ele, "invalid");
+                        }
+						addClass(ele, options.errorClass);
                         unbindEvent(img, 'error', onErrorHandler);
                         unbindEvent(img, 'load', onLoadHandler);
                     };
@@ -234,7 +238,7 @@
                             ele.style.backgroundImage = 'url("' + src + '")';
                         }
                         itemLoaded(ele, options, !parentCallback);
-						if(parentCallback) parentCallback();
+						if(parentCallback) parentCallback(false);
                         unbindEvent(img, 'load', onLoadHandler);
                         unbindEvent(img, 'error', onErrorHandler);
                     };
@@ -256,16 +260,25 @@
 						parent.load();
 					}
                     itemLoaded(ele, options, !parentCallback);
-					if(parentCallback) parentCallback();
+					if(parentCallback) parentCallback(false);
                 }
             } else { // a wrapper with tags inside that should be loaded at once
 				var childElements = ele.querySelectorAll('[data-src]');
 				if(childElements) {
 					var counter = 0;
-					var childElementLoaded = function() {
+					var errorFlag = false;
+					var childElementLoaded = function(failure) {
 						counter++;
+						if(failure)	errorFlag = failure;
 						if(counter == childElements.length) {
-							itemLoaded(ele, options, true);
+							//if single elements couldn't be loaded and an error handling is specified, raise an error
+							//otherwise proceed with success
+							if(errorFlag == true && options.error) {
+								options.error(ele, "invalid");
+								addClass(ele, options.errorClass);
+							} else {
+								itemLoaded(ele, options, true, !errorFlag);
+							}
 						}
 					};
 					for(var i = 0; i < childElements.length; i++) {
@@ -279,9 +292,9 @@
         }
     }
 
-    function itemLoaded(ele, options, finishedLoading) {
+    function itemLoaded(ele, options, finishedLoading, allElementsSucceeded) {
         addClass(ele, options.successClass);
-        if (options.success && finishedLoading) options.success(ele);
+        if (options.success && finishedLoading) options.success(ele, allElementsSucceeded);
         // cleanup markup, remove data source attributes
         removeAttr(ele, options.src);
         removeAttr(ele, options.srcset);
