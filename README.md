@@ -1,4 +1,4 @@
-#hey, be lazy
+# hey, be lazy
 [![Downloads](https://img.shields.io/npm/dm/blazy.svg?style=flat)](https://www.npmjs.com/package/blazy)
 [![Latest Stable Version](https://img.shields.io/npm/v/blazy.svg?style=flat)](https://www.npmjs.com/package/blazy)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dinbror/blazy/blob/master/LICENSE)
@@ -183,5 +183,5 @@ Exchange `latest` with the specific version number if you want to lock it in.
 * Added throttle function to ensure that we don't call resize/scroll functions too often.
 * Cleaning image markup when image has loaded.
 
-##LICENSE: 
+## LICENSE: 
 Copyright (c) 2013-16 Bjørn Klinggaard. Licensed under the [The MIT License (MIT)](http://opensource.org/licenses/MIT).
