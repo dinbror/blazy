@@ -55,6 +55,7 @@
         scope.options.container = scope.options.containerClass ? document.querySelectorAll(scope.options.containerClass) : false;
         scope.options.errorClass = scope.options.errorClass || 'b-error';
         scope.options.breakpoints = scope.options.breakpoints || false;
+        scope.options.tryBreakpoints = scope.options.tryBreakpoints || false;
         scope.options.loadInvisible = scope.options.loadInvisible || false;
         scope.options.successClass = scope.options.successClass || 'b-loaded';
         scope.options.validateDelay = scope.options.validateDelay || 25;
@@ -203,7 +204,21 @@
     function loadElement(ele, force, options) {
         // if element is visible, not loaded or forced
         if (!hasClass(ele, options.successClass) && (force || options.loadInvisible || (ele.offsetWidth > 0 && ele.offsetHeight > 0))) {
-            var dataSrc = getAttr(ele, _source) || getAttr(ele, options.src); // fallback to default 'data-src'
+            var dataSrc = getAttr(ele, _source);
+            // if suitable source hasn't been found try to find source for next breakpoint
+            // breakpoints should be ordered from small to larger screens
+            if (!dataSrc && options.tryBreakpoints && options.breakpoints) {
+                var tryNext;
+                for (var i = 0; i < options.breakpoints.length; i++) {
+                    if (tryNext) {
+                        dataSrc = getAttr(ele, options.breakpoints[i].src);
+                        if (dataSrc) break;
+                    } else if (options.breakpoints[i].src === _source) {
+                        tryNext = true;
+                    }
+                }
+            }
+            dataSrc = dataSrc || getAttr(ele, options.src); // fallback to default 'data-src'
             if (dataSrc) {
                 var dataSrcSplitted = dataSrc.split(options.separator);
                 var src = dataSrcSplitted[_isRetina && dataSrcSplitted.length > 1 ? 1 : 0];
