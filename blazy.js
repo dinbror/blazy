@@ -194,11 +194,12 @@
 
     function inView(rect, viewport){
         // Intersection
-        return (rect.width > 0 && rect.height > 0) &&
-               rect.right >= viewport.left &&
+        return rect.right >= viewport.left &&
                rect.bottom >= viewport.top && 
                rect.left <= viewport.right && 
-               rect.top <= viewport.bottom;
+               rect.top <= viewport.bottom &&
+               (rect.width > 0 && rect.height > 0);
+
     }
 
     function loadElement(ele, force, options) {
