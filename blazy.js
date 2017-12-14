@@ -21,7 +21,7 @@
     'use strict';
 
     //private vars
-    var _source, _viewport, _isRetina, _supportClosest, _attrSrc = 'src', _attrSrcset = 'srcset';
+    var _source, _isRetina, _supportClosest, _attrSrc = 'src', _attrSrcset = 'srcset';
 
     // constructor
     return function Blazy(options) {
@@ -63,10 +63,9 @@
         scope.options.src = _source = scope.options.src || 'data-src';
         _supportClosest = Element.prototype.closest;
         _isRetina = window.devicePixelRatio > 1;
-        _viewport = {};
-        _viewport.top = 0 - scope.options.offset;
-        _viewport.left = 0 - scope.options.offset;
-
+        scope.options._viewport = {};
+        scope.options._viewport.top = 0 - scope.options.offset;
+        scope.options._viewport.left = 0 - scope.options.offset;
 
         /* public functions
          ************************************/
@@ -101,11 +100,11 @@
         //throttle, ensures that we don't call the functions too often
         util.validateT = throttle(function() {
             validate(scope);
-        }, scope.options.validateDelay, scope);
+        }, scope.options._viewport.validateDelay, scope);
         util.saveViewportOffsetT = throttle(function() {
-            saveViewportOffset(scope.options.offset);
+            saveViewportOffset(scope.options._viewport, scope.options.offset);
         }, scope.options.saveViewportOffsetDelay, scope);
-        saveViewportOffset(scope.options.offset);
+        saveViewportOffset(scope.options._viewport, scope.options.offset);
 
         //handle multi-served image src (obsolete)
         each(scope.options.breakpoints, function(object) {
@@ -164,23 +163,22 @@
 
     function elementInView(ele, options) {
         var rect = ele.getBoundingClientRect();
-
         if(options.container && _supportClosest){
             // Is element inside a container?
             var elementContainer = ele.closest(options.containerClass);
             if(elementContainer){
                 var containerRect = elementContainer.getBoundingClientRect();
                 // Is container in view?
-                if(inView(containerRect, _viewport)){
+                if(inView(containerRect, options._viewport)){
                     var top = containerRect.top - options.offset;
                     var right = containerRect.right + options.offset;
                     var bottom = containerRect.bottom + options.offset;
                     var left = containerRect.left - options.offset;
                     var containerRectWithOffset = {
-                        top: top > _viewport.top ? top : _viewport.top,
-                        right: right < _viewport.right ? right : _viewport.right,
-                        bottom: bottom < _viewport.bottom ? bottom : _viewport.bottom,
-                        left: left > _viewport.left ? left : _viewport.left
+                        top: top > options._viewport.top ? top : options._viewport.top,
+                        right: right < options._viewport.right ? right : options._viewport.right,
+                        bottom: bottom < options._viewport.bottom ? bottom : options._viewport.bottom,
+                        left: left > options._viewport.left ? left : options._viewport.left
                     };
                     // Is element in view of container?
                     return inView(rect, containerRectWithOffset);
@@ -189,7 +187,7 @@
                 }
             }
         }      
-        return inView(rect, _viewport);
+        return inView(rect, options._viewport);
     }
 
     function inView(rect, viewport){
@@ -328,7 +326,7 @@
         return array;
     }
 
-    function saveViewportOffset(offset) {
+    function saveViewportOffset(_viewport, offset) {
         _viewport.bottom = (window.innerHeight || document.documentElement.clientHeight) + offset;
         _viewport.right = (window.innerWidth || document.documentElement.clientWidth) + offset;
     }
