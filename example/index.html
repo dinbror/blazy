@@ -280,6 +280,21 @@
     &lt;div class="b-lazy" data-src=&quot;image.jpg&quot;&gt;&lt;/div&gt;
 			</pre>
 		</div>
+		<div class="example" id="multiple-background-images">
+			<h2>2.1: Lazy load multiple background images example</h2>
+			<div class="wrapper ratio">
+			    <div class="b-lazy" data-src="http://cdn.dinbror.dk/assets/blazy/02.jpg#http://cdn.dinbror.dk/assets/blazy/04.jpg" style="background-blend-mode: multiply;"></div>
+			</div>
+			<pre>
+			&lt;div class="b-lazy" data-src=&quot;image1.jpg#image2.jpg&quot;&gt;&lt;/div&gt;
+
+			CSS:
+
+			.b-lazy {
+			  background-blend-mode: multiply;
+			}
+			</pre>
+		</div>
 		<div class="example" id="image-inside-container">
 			<h2>3.1: Horizontal lazyload inside container example</h2>
 			<div class="container horizontal">
