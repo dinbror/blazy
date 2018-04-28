@@ -7,7 +7,6 @@
 
 /*!
     add multiple backgrounds (2018.02.19) - LuisKrotz
-    validate, get self.lenght outside for loop (2018.04.28) - LuisKrotz
 */
 
 ;
@@ -155,9 +154,8 @@
     }
 
     function validate(self) {
-        var util = self._util, t = util.count, i;
-
-        for (i = 0; i < t; i++) {
+        var util = self._util;
+        for (var i = 0; i < util.count; i++) {
             var element = util.elements[i];
             if (elementInView(element, self.options) || hasClass(element, self.options.successClass)) {
                 self.load(element);
