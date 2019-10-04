@@ -227,7 +227,7 @@
                         // Is element an image
                         if (isImage) {
                             if(!isPicture) {
-                                handleSources(ele, src, srcset);
+                                handleSources(ele, "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", srcset);
                             }
                         // or background-image
                         } else {
