@@ -163,6 +163,21 @@
     }
 
     function elementInView(ele, options) {
+        var attrValue = null;
+        var isNotInDOM = null;
+
+        if (ele.nodeName && ele.nodeName.toLowerCase() === 'img') {
+            attrValue = ele.getAttribute('src');
+            isNotInDOM = document.querySelectorAll('img[src="' + attrValue + '"]').length <= 0;
+        } else {
+            attrValue = ele.getAttribute('data-src');
+            isNotInDOM = document.querySelectorAll('[data-src="' + attrValue + '"]').length <= 0;
+        }
+
+        if (isNotInDOM) {
+            return;
+        }
+        
         var rect = ele.getBoundingClientRect();
 
         if(options.container && _supportClosest){
